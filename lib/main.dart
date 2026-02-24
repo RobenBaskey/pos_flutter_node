@@ -1,0 +1,32 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:pos/core/constants/app_sizes.dart';
+import 'package:pos/core/theme/theme_controller.dart';
+import 'package:pos/presentations/bindings/app_bindings.dart';
+
+import 'core/theme/app_theme.dart';
+import 'presentations/routes/app_pages.dart';
+import 'presentations/routes/app_routes.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  ThemeController get theme => Get.find();
+
+  @override
+  Widget build(BuildContext context) {
+    AppSizes().init(context);
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      initialRoute: AppRoutes.splash,
+      initialBinding: AppBindings(),
+      getPages: AppPages.pages,
+    );
+  }
+}
