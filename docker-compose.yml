@@ -7,5 +7,5 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "3001:80" # container 80, host 3001
+      - "3001:80" # container 80 → host 3001 (any free port)
     restart: unless-stopped
