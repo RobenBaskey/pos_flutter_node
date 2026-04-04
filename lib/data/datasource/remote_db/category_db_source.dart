@@ -13,7 +13,7 @@ abstract class CategoryDbSource {
     required String id,
     required String name,
     String? parentId,
-    required String image,
+    String? image,
   });
   Future<bool> deleteCategory({required String id});
   Future<List<CategoryModel>> getCategories();
@@ -63,10 +63,29 @@ class CategoryDbSourceImpl extends CategoryDbSource {
     required String id,
     required String name,
     String? parentId,
-    required String image,
-  }) {
-    // TODO: implement updateCategory
-    throw UnimplementedError();
+    String? image,
+  }) async {
+    try {
+      if (image != null) {
+        await dioClients.putWithFile(
+          url: ApiUrl.updateCategoryUrl(),
+          body: {"id": id, "name": name},
+          isTokenRequired: true,
+          filePath: image,
+          fileKeyName: "image",
+        );
+        return true;
+      } else {
+        await dioClients.put(
+          url: ApiUrl.updateCategoryUrl(),
+          body: {"id": id, "name": name},
+          isTokenRequired: true,
+        );
+        return true;
+      }
+    } catch (e) {
+      throw Exception("Failed to add category: ${e.toString()}");
+    }
   }
 
   @override

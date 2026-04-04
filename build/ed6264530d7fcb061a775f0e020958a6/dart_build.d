@@ -1,0 +1,1 @@
+ /home/roben/Projects/KG/POS/pos/build/ed6264530d7fcb061a775f0e020958a6/dart_build_result.json:  /home/roben/Development/flutter/bin/cache/dart-sdk/version /home/roben/Projects/KG/POS/pos/.dart_tool/package_config.json /home/roben/Projects/KG/POS/pos/pubspec.yaml

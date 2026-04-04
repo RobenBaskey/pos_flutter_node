@@ -1,9 +1,12 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:pos/core/constants/app_constants.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../core/utils/utils.dart';
+import '../../widgets/custom_button.dart';
 import '../../widgets/custom_container_shape.dart';
 import '../../widgets/custom_divider.dart';
 import '../../widgets/custom_text_field.dart';
@@ -34,6 +37,24 @@ class CouponPage extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                           fontSize: 20,
                         ),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    CustomButton(
+                      onTap: () {},
+                      title: "",
+                      verticalPadding: 20,
+                      horizontalPadding: 14,
+                      borderRadius: 8,
+                      child: Row(
+                        children: [
+                          Icon(Icons.add, color: Colors.white),
+                          SizedBox(width: 6),
+                          Text(
+                            "Add Coupon",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
                       ),
                     ),
                     SizedBox(width: 10),
@@ -125,7 +146,16 @@ class CouponPage extends StatelessWidget {
                                 ),
                               ),
                               IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Utils.showDeleteDialog(
+                                    context,
+                                    onYesTap: () {},
+                                    isLoading: false.obs,
+                                    title: "Delete Coupon",
+                                    description:
+                                        "Do you want to delete this coupon?",
+                                  );
+                                },
                                 icon: Icon(
                                   Icons.delete,
                                   size: 18,

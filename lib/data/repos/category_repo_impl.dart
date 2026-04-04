@@ -28,4 +28,14 @@ class CategoryRepoImpl implements CategoryRepo {
   Future<bool> deleteCategory(String id) {
     return categoryDbSource.deleteCategory(id: id);
   }
+
+  @override
+  Future<bool> updateCategory({
+    required String id,
+    required String name,
+    String? parentId,
+    String? image,
+  }) {
+    return categoryDbSource.updateCategory(id: id, name: name, image: image);
+  }
 }

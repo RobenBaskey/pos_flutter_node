@@ -5,6 +5,7 @@ import 'package:pos/core/network/api_url.dart';
 import 'package:pos/core/utils/utils.dart';
 import 'package:pos/presentations/controller/category_controller.dart';
 import 'package:pos/presentations/views/categories/components/add_category.dart';
+import 'package:pos/presentations/views/categories/components/update_category.dart';
 import 'package:pos/presentations/widgets/custom_image.dart';
 
 import '../../../core/theme/app_colors.dart';
@@ -191,7 +192,27 @@ class CategoryPage extends GetView<CategoryController> {
                                                       ),
                                                     ),
                                                     IconButton(
-                                                      onPressed: () {},
+                                                      onPressed: () {
+                                                        controller
+                                                                .updateNameController
+                                                                .text =
+                                                            catItem.name ?? "";
+                                                        Utils.showCustomDialog(
+                                                          context: context,
+                                                          alignment:
+                                                              Alignment.center,
+                                                          bearerColor:
+                                                              Theme.of(context)
+                                                                  .colorScheme
+                                                                  .outline
+                                                                  .withValues(
+                                                                    alpha: 0.4,
+                                                                  ),
+                                                          child: UpdateCategory(
+                                                            category: catItem,
+                                                          ),
+                                                        );
+                                                      },
                                                       icon: Icon(
                                                         FontAwesomeIcons
                                                             .penToSquare,

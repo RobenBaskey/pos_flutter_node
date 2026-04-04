@@ -21,6 +21,11 @@ class CategoryController extends GetxController {
   ///delete category
   var isCategoryDeleting = false.obs;
 
+  ///update category
+  final TextEditingController updateNameController = TextEditingController();
+  final TextEditingController updateDescriptionController =
+      TextEditingController();
+
   @override
   void onInit() {
     getCategories();
@@ -92,6 +97,34 @@ class CategoryController extends GetxController {
       debugPrint(e.toString());
     } finally {
       isCategoryDeleting.value = false;
+    }
+  }
+
+  Future updateCategory({CategoryEntity? category}) async {
+    if (updateNameController.text.trim().isEmpty) {
+      Utils.showSnackBar("Category name is required");
+      return;
+    }
+
+    try {
+      isCategoryAdding.value = true;
+      var result = await _categoryRepo.updateCategory(
+        id: category?.id ?? "",
+        name: updateNameController.text.trim(),
+        image: selectedImagePath.value,
+      );
+      if (result) {
+        updateNameController.clear();
+        updateDescriptionController.clear();
+        selectedImagePath.value = null;
+        Get.back(); // Close the add category dialog
+        Utils.showSnackBar("Category updated successfully");
+        getCategories(isLoading: false);
+      }
+    } catch (e) {
+      debugPrint("Error adding category: $e");
+    } finally {
+      isCategoryAdding.value = false;
     }
   }
 }
