@@ -7,5 +7,5 @@ services:
       context: . # Dockerfile location
       dockerfile: Dockerfile
     ports:
-      - "3001:3001" # expose container port 3001 to host
+      - "3001:80" # expose container port 3001 to host
     restart: unless-stopped
