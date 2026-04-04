@@ -1,15 +1,19 @@
-# Stage 1: Build (optional if already built locally)
-FROM ghcr.io/cirruslabs/flutter:latest AS build
-WORKDIR /app
-COPY . .
-RUN flutter build web
+# Dockerfile for Flutter Web + Nginx (port 3001)
 
-# Stage 2: Serve with Nginx
+# Use lightweight Nginx image
 FROM nginx:alpine
-COPY --from=build /app/build/web /usr/share/nginx/html
 
-# Optional: custom nginx config
+# Set working directory inside container
+WORKDIR /usr/share/nginx/html
+
+# Copy your locally built Flutter web files
+COPY build/web/ .
+
+# Copy custom nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
+# Expose the port you want
 EXPOSE 3001
+
+# Run Nginx in foreground
 CMD ["nginx", "-g", "daemon off;"]
