@@ -4,8 +4,8 @@ services:
   flutter-web:
     container_name: jonosokti-admin
     build:
-      context: . # Dockerfile location
+      context: .
       dockerfile: Dockerfile
     ports:
-      - "80:80" # expose container port 3001 to host
+      - "3001:80" # container 80, host 3001
     restart: unless-stopped
