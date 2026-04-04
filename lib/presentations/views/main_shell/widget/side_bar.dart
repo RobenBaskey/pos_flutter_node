@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pos/core/constants/app_constants.dart';
 import 'package:pos/core/theme/app_colors.dart';
 import 'package:pos/presentations/controller/main_shell_controller.dart';
+import 'package:pos/presentations/routes/app_routes.dart';
 import 'package:pos/presentations/widgets/custom_divider.dart';
 
 class SideBar extends GetView<MainShellController> {
@@ -13,13 +15,13 @@ class SideBar extends GetView<MainShellController> {
       children: [
         SizedBox(height: 14),
         Text(
-          "POSTrack",
+          AppConstants.appName,
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
         ),
-        Text(
-          "Your Point of Sale Solution",
-          style: TextStyle(height: 1, fontSize: 10),
-        ),
+        // Text(
+        //   "Your Point of Sale Solution",
+        //   style: TextStyle(height: 1, fontSize: 10),
+        // ),
         SizedBox(height: 14),
         Expanded(
           child: Padding(
@@ -58,7 +60,11 @@ class SideBar extends GetView<MainShellController> {
           padding: const EdgeInsets.only(bottom: 6.0, top: 6),
           child: InkWell(
             onTap: () {
-              controller.selectedIndex.value = index;
+              if (title.toLowerCase().contains("logout")) {
+                Get.offAllNamed(AppRoutes.login);
+              } else {
+                controller.selectedIndex.value = index;
+              }
             },
             borderRadius: BorderRadius.circular(8),
             child: Obx(

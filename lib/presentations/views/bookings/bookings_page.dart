@@ -6,10 +6,9 @@ import 'package:pos/presentations/widgets/custom_container_shape.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../widgets/custom_divider.dart';
 import '../../widgets/custom_text_field.dart';
-import '../../widgets/glass_widget.dart';
 
-class PosOrders extends StatelessWidget {
-  const PosOrders({super.key});
+class BookingsPage extends StatelessWidget {
+  const BookingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +28,7 @@ class PosOrders extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        "POS Orders",
+                        "Bookings",
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 20,
@@ -69,7 +68,7 @@ class PosOrders extends StatelessWidget {
                   columns: [
                     DataColumn2(label: Text("INVOICE #"), size: ColumnSize.M),
                     DataColumn2(label: Text("DATE"), size: ColumnSize.M),
-                    DataColumn2(label: Text("DETAILS"), size: ColumnSize.L),
+                    DataColumn2(label: Text("SERVICE"), size: ColumnSize.L),
                     DataColumn2(label: Text("TOTAL"), size: ColumnSize.S),
                     DataColumn2(label: Text("PAYMENT"), size: ColumnSize.S),
                     DataColumn2(label: Text("STATUS"), size: ColumnSize.S),
@@ -89,7 +88,7 @@ class PosOrders extends StatelessWidget {
                               ),
                               SizedBox(width: 6),
                               Text(
-                                "POS-20260224-0003",
+                                "BOK-20260224-0003",
                                 style: TextStyle(
                                   fontSize: 10,
                                   fontWeight: FontWeight.w600,
@@ -122,62 +121,8 @@ class PosOrders extends StatelessWidget {
                         DataCell(
                           SizedBox(
                             width: double.maxFinite,
-                            child: GlassWidget(
-                              padding: 6,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Icon(Icons.location_pin, size: 12),
-                                      SizedBox(width: 6),
-                                      Expanded(
-                                        child: Text(
-                                          "Location: Krishibid HQ",
-                                          style: TextStyle(fontSize: 10),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Icon(Icons.monitor, size: 12),
-                                      SizedBox(width: 6),
-                                      Expanded(
-                                        child: Text(
-                                          "Terminal: POS-KGH-01",
-                                          style: TextStyle(fontSize: 10),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Icon(Icons.person_2_outlined, size: 12),
-                                      SizedBox(width: 6),
-                                      Expanded(
-                                        child: Text(
-                                          "Client: James",
-                                          style: TextStyle(fontSize: 10),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Icon(Icons.person_2_outlined, size: 12),
-                                      SizedBox(width: 6),
-                                      Expanded(
-                                        child: Text(
-                                          "Cashier: Store Cashier",
-                                          style: TextStyle(fontSize: 10),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                            child: Text(
+                              "Check engine light and malfunction indicators diagnosis",
                             ),
                           ),
                         ),

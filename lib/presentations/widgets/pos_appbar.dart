@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../core/theme/theme_controller.dart';
-import 'custom_button.dart';
+import '../routes/app_routes.dart';
 
 class PosAppbar extends StatelessWidget {
   const PosAppbar({super.key, required this.theme});
@@ -27,33 +27,8 @@ class PosAppbar extends StatelessWidget {
         children: [
           Expanded(
             child: Text(
-              "Point of Sale",
+              "Service Management",
               style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
-            ),
-          ),
-          CustomButton(
-            onTap: () {},
-            title: "",
-            verticalPadding: 4,
-            horizontalPadding: 14,
-            borderRadius: 4,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  "POS",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                SizedBox(width: 10),
-                Icon(
-                  Icons.keyboard_arrow_down_rounded,
-                  color: Colors.white,
-                  weight: 2,
-                ),
-              ],
             ),
           ),
           SizedBox(width: 14),
@@ -74,10 +49,10 @@ class PosAppbar extends StatelessWidget {
             ),
           ),
           SizedBox(width: 14),
-          Text("Welcome Krishibid Bazar Admin"),
-          SizedBox(width: 10),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              Get.offAllNamed(AppRoutes.login);
+            },
             child: Text(
               "Logout",
               style: TextStyle(color: Colors.red, fontWeight: FontWeight.w600),

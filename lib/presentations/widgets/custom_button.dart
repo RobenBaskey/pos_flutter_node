@@ -15,10 +15,10 @@ class CustomButton extends StatelessWidget {
     this.titleColor,
     this.verticalPadding,
     this.horizontalPadding,
-    this.borderRadius = 20,
+    this.borderRadius = 8,
     this.child,
     this.letterSpacing,
-    this.elevation
+    this.elevation,
   });
   final String title;
   final Function() onTap;
@@ -43,7 +43,7 @@ class CustomButton extends StatelessWidget {
         foregroundColor: Colors.green,
         padding: EdgeInsets.symmetric(
           vertical: verticalPadding ?? 20,
-          horizontal: horizontalPadding ?? 0,
+          horizontal: horizontalPadding ?? 12,
         ),
         elevation: elevation,
         shape: RoundedRectangleBorder(
@@ -52,19 +52,20 @@ class CustomButton extends StatelessWidget {
         ),
         backgroundColor: color ?? AppColors.primary.withValues(alpha: 0.8),
       ),
-      child:
-          child ??
-          Center(
-            child: Text(
-              title,
-              style: TextStyle(
-                color: titleColor ?? Colors.white,
-                fontWeight: fontWeight ?? FontWeight.w600,
-                fontSize: fontSize,
-                letterSpacing: letterSpacing,
-              ),
-            ),
-          ),
+      child: Center(
+        child: isLoading == true
+            ? CircularProgressIndicator(color: Colors.white)
+            : child ??
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: titleColor ?? Colors.white,
+                      fontWeight: fontWeight ?? FontWeight.w600,
+                      fontSize: fontSize,
+                      letterSpacing: letterSpacing,
+                    ),
+                  ),
+      ),
     );
   }
 }

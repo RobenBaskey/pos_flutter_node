@@ -1,6 +1,9 @@
 import 'package:get/get.dart';
+import 'package:pos/presentations/bindings/category_bindings.dart';
+import 'package:pos/presentations/bindings/job_type_bindings.dart';
 import 'package:pos/presentations/bindings/login_bindings.dart';
 import 'package:pos/presentations/bindings/main_shell_bindings.dart';
+import 'package:pos/presentations/bindings/workplace_type_bindings.dart';
 import 'package:pos/presentations/views/main_shell/main_shell.dart';
 
 import '../views/login/login_page.dart';
@@ -17,7 +20,12 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.mainShell,
-      binding: MainShellBindings(),
+      bindings: [
+        MainShellBindings(),
+        JobTypeBindings(),
+        CategoryBindings(),
+        WorkplaceTypeBindings(),
+      ],
       page: () => MainShell(),
     ),
   ];

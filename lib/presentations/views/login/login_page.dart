@@ -1,11 +1,9 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos/core/constants/app_sizes.dart';
 import 'package:pos/core/theme/app_colors.dart';
 import 'package:pos/core/theme/theme_controller.dart';
 import 'package:pos/presentations/controller/login_controller.dart';
-import 'package:pos/presentations/routes/app_routes.dart';
 import 'package:pos/presentations/widgets/custom_button.dart';
 import 'package:pos/presentations/widgets/custom_text_field.dart';
 import 'package:pos/presentations/widgets/glass_widget.dart';
@@ -31,20 +29,20 @@ class LoginPage extends GetView<LoginController> {
           children: [
             SizedBox(height: getHeight(90), width: double.infinity),
             Text(
-              "POSTrack",
+              "জনশক্তি",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 60),
             ),
-            Text("Your Point of Sale Solution", style: TextStyle(height: 1)),
             SizedBox(height: getHeight(70)),
             SizedBox(
               width: 540,
               child: GlassWidget(
                 padding: 24,
-                child: Obx(
-                  () => controller.isLoginActive.value
-                      ? _loginWidget(context)
-                      : _regisWidget(context),
-                ),
+                // child: Obx(
+                //   () => controller.isLoginActive.value
+                //       ? _loginWidget(context)
+                //       : _regisWidget(context),
+                // ),
+                child: _loginWidget(context),
               ),
             ),
           ],
@@ -65,21 +63,20 @@ class LoginPage extends GetView<LoginController> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Email Address",
-              style: TextStyle(fontWeight: FontWeight.w600),
-            ),
+            Text("Phone", style: TextStyle(fontWeight: FontWeight.w600)),
             SizedBox(height: 8),
             CustomTextField(
+              controller: controller.phoneController,
               borderColor: Theme.of(context).colorScheme.outline,
               borderRadius: 8,
-              hintText: "admin@example.com",
-              suffixIcon: Icon(Icons.email_outlined, color: AppColors.primary),
+              hintText: "01********",
+              suffixIcon: Icon(Icons.phone, color: AppColors.primary),
             ),
             SizedBox(height: getHeight(20)),
             Text("Password", style: TextStyle(fontWeight: FontWeight.w600)),
             SizedBox(height: 8),
             CustomTextField(
+              controller: controller.passwordController,
               borderColor: Theme.of(context).colorScheme.outline,
               borderRadius: 8,
               hintText: "******",
@@ -87,125 +84,40 @@ class LoginPage extends GetView<LoginController> {
             ),
 
             SizedBox(height: 30),
-            CustomButton(
+            Obx(()=> CustomButton(
               onTap: () {
-                Get.toNamed(AppRoutes.mainShell);
+                controller.login();
               },
               title: "Sign In",
               borderRadius: 8,
-            ),
+              isLoading: controller.isLoginLoading.value,
+            ),),
             SizedBox(height: 20),
-            Center(
-              child: RichText(
-                textAlign: TextAlign.center,
-                text: TextSpan(
-                  style: TextStyle(
-                    color: Theme.of(context).primaryTextTheme.labelSmall?.color,
-                  ),
-                  children: [
-                    TextSpan(text: "Don't have an account?  "),
-                    TextSpan(
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          controller.isLoginActive(false);
-                        },
-                      text: "Sign Up",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
 
-  Column _regisWidget(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          "Create Account",
-          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 24),
-        ),
-        Text("Create account to explore inside."),
-        SizedBox(height: getHeight(30)),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Full Name", style: TextStyle(fontWeight: FontWeight.w600)),
-            SizedBox(height: 8),
-            CustomTextField(
-              borderColor: Theme.of(context).colorScheme.outline,
-              borderRadius: 8,
-              hintText: "John Doe",
-              suffixIcon: Icon(Icons.person, color: AppColors.primary),
-            ),
-            SizedBox(height: getHeight(20)),
-            Text(
-              "Email Address",
-              style: TextStyle(fontWeight: FontWeight.w600),
-            ),
-            SizedBox(height: 8),
-            CustomTextField(
-              borderColor: Theme.of(context).colorScheme.outline,
-              borderRadius: 8,
-              hintText: "admin@example.com",
-              suffixIcon: Icon(Icons.email_outlined, color: AppColors.primary),
-            ),
-            SizedBox(height: getHeight(20)),
-            Text("Password", style: TextStyle(fontWeight: FontWeight.w600)),
-            SizedBox(height: 8),
-            CustomTextField(
-              borderColor: Theme.of(context).colorScheme.outline,
-              borderRadius: 8,
-              hintText: "******",
-              suffixIcon: Icon(Icons.visibility, color: AppColors.primary),
-            ),
-            SizedBox(height: getHeight(20)),
-            Text(
-              "Confirm Password",
-              style: TextStyle(fontWeight: FontWeight.w600),
-            ),
-            SizedBox(height: 8),
-            CustomTextField(
-              borderColor: Theme.of(context).colorScheme.outline,
-              borderRadius: 8,
-              hintText: "******",
-              suffixIcon: Icon(Icons.visibility, color: AppColors.primary),
-            ),
-
-            SizedBox(height: 30),
-            CustomButton(onTap: () {}, title: "Sign Up", borderRadius: 8),
-            SizedBox(height: 20),
-            Center(
-              child: RichText(
-                textAlign: TextAlign.center,
-                text: TextSpan(
-                  style: TextStyle(
-                    color: Theme.of(context).primaryTextTheme.labelSmall?.color,
-                  ),
-                  children: [
-                    TextSpan(text: "Already have an account?  "),
-                    TextSpan(
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          controller.isLoginActive(true);
-                        },
-                      text: "Sign In",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            // Center(
+            //   child: RichText(
+            //     textAlign: TextAlign.center,
+            //     text: TextSpan(
+            //       style: TextStyle(
+            //         color: Theme.of(context).primaryTextTheme.labelSmall?.color,
+            //       ),
+            //       children: [
+            //         TextSpan(text: "Don't have an account?  "),
+            //         TextSpan(
+            //           recognizer: TapGestureRecognizer()
+            //             ..onTap = () {
+            //               controller.isLoginActive(false);
+            //             },
+            //           text: "Sign Up",
+            //           style: TextStyle(
+            //             fontWeight: FontWeight.bold,
+            //             color: AppColors.primary,
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ],

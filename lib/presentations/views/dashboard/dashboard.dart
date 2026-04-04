@@ -29,18 +29,19 @@ class DashboardPage extends GetView<DashboardController> {
                     "Dashboard",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
                   ),
-                  Text("Welcome to your point of sale dashboard"),
                   SizedBox(height: 20),
                   IntrinsicHeight(
                     child: Row(
                       children: [
                         _dashboardItemWidget(
                           context,
-                          title: "TODAY'S POS SALES",
+                          title: "TODAY'S ACTIVE USER",
                           data: "0.00",
-                          content: "Completed POS revenue today",
-                          icon: Icons.attach_money_rounded,
+                          content: "Daily visited users",
+                          icon: FontAwesomeIcons.users,
                           color: Colors.green,
+                          fontSize: 13,
+                          size: 18,
                         ),
                         SizedBox(width: 20),
                         _dashboardItemWidget(
@@ -54,9 +55,9 @@ class DashboardPage extends GetView<DashboardController> {
                         SizedBox(width: 20),
                         _dashboardItemWidget(
                           context,
-                          title: "TOTAL PRODUCTS",
+                          title: "TOTAL JOBS",
                           data: "51",
-                          content: "Prodcuts in inventory",
+                          content: "Created jobs by customer",
                           icon: FontAwesomeIcons.boxOpen,
                           size: 18,
                           color: Colors.green,
@@ -80,27 +81,29 @@ class DashboardPage extends GetView<DashboardController> {
                       children: [
                         _dashboardItemWidget(
                           context,
-                          title: "TOTAL SUPPLIERS",
+                          title: "TOTAL PROVIDERS",
                           data: "26",
-                          content: "Active suppliers",
-                          icon: Icons.fire_truck,
+                          content: "Active Providers",
+                          icon: FontAwesomeIcons.users,
                           color: Colors.orange,
+                          size: 18,
                         ),
                         SizedBox(width: 20),
                         _dashboardItemWidget(
                           context,
-                          title: "TOTAL LOCATIONS",
+                          title: "TOTAL CUSTOMERS",
                           data: "10",
-                          content: "Storage locations",
-                          icon: Icons.location_pin,
+                          content: "Active Customers",
+                          icon: FontAwesomeIcons.users,
                           color: Colors.cyan,
+                          size: 18,
                         ),
                         SizedBox(width: 20),
                         _dashboardItemWidget(
                           context,
-                          title: "TOTAL POS SALES",
+                          title: "TOTAL BOOKINGS",
                           data: "304",
-                          content: "Total POS Sales",
+                          content: "Total Service Bookings",
                           icon: Icons.shopping_cart_outlined,
                           size: 18,
                           color: Colors.redAccent,
@@ -130,21 +133,22 @@ class DashboardPage extends GetView<DashboardController> {
                   children: [
                     Expanded(
                       child: _dashboardChartWidget(
-                        title: "Product Category Distribution",
+                        title: "Customer Category Distribution",
                         icon: Icons.pie_chart,
                         data: controller.productCategory,
                         item: 51,
-                        itemType: "Products",
+                        itemType: "Customer",
                       ),
                     ),
                     SizedBox(width: 20),
                     Expanded(
                       child: _dashboardChartWidget(
-                        title: "Supplier Contribution",
-                        icon: Icons.fire_truck,
+                        title: "Provider Category Distribution",
+                        icon: FontAwesomeIcons.users,
                         data: controller.supplierContribute,
                         item: 522,
-                        itemType: "Orders",
+                        itemType: "Providers",
+                        size: 18,
                       ),
                     ),
                   ],
@@ -168,7 +172,7 @@ class DashboardPage extends GetView<DashboardController> {
                           SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              "Recent Stock Movements",
+                              "Recent Bookings",
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 16,
@@ -255,6 +259,7 @@ class DashboardPage extends GetView<DashboardController> {
     required List<ChartData> data,
     required int item,
     required String itemType,
+    double size = 24,
   }) {
     return CustomContainerShape(
       padding: 0,
@@ -264,7 +269,7 @@ class DashboardPage extends GetView<DashboardController> {
             padding: const EdgeInsets.all(20.0),
             child: Row(
               children: [
-                Icon(icon, color: AppColors.primary),
+                Icon(icon, color: AppColors.primary, size: size),
                 SizedBox(width: 8),
                 Expanded(
                   child: Text(
@@ -324,6 +329,7 @@ class DashboardPage extends GetView<DashboardController> {
     required IconData icon,
     required Color color,
     double size = 20,
+    double fontSize = 14,
   }) {
     return Expanded(
       child: CustomContainerShape(
@@ -338,7 +344,7 @@ class DashboardPage extends GetView<DashboardController> {
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       color: AppColors.greyLightTextColor,
-                      fontSize: 14,
+                      fontSize: fontSize,
                       letterSpacing: 1.3,
                     ),
                   ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos/core/constants/app_sizes.dart';
+import 'package:pos/core/service/init_services.dart';
 import 'package:pos/core/theme/theme_controller.dart';
 import 'package:pos/presentations/bindings/app_bindings.dart';
 
@@ -8,7 +9,8 @@ import 'core/theme/app_theme.dart';
 import 'presentations/routes/app_pages.dart';
 import 'presentations/routes/app_routes.dart';
 
-void main() {
+Future main() async {
+  await InitServices().onInit();
   runApp(const MyApp());
 }
 
@@ -21,6 +23,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     AppSizes().init(context);
     return GetMaterialApp(
+      title: "জনশক্তি",
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,

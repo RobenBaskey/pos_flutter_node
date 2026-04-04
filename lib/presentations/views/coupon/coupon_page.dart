@@ -1,15 +1,15 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pos/core/constants/app_constants.dart';
 
 import '../../../core/theme/app_colors.dart';
-import '../../widgets/custom_button.dart';
 import '../../widgets/custom_container_shape.dart';
 import '../../widgets/custom_divider.dart';
 import '../../widgets/custom_text_field.dart';
 
-class ClientPage extends StatelessWidget {
-  const ClientPage({super.key});
+class CouponPage extends StatelessWidget {
+  const CouponPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class ClientPage extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        "Customer Management",
+                        "Coupon Management",
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 20,
@@ -40,7 +40,7 @@ class ClientPage extends StatelessWidget {
                     SizedBox(
                       width: 260,
                       child: CustomTextField(
-                        hintText: "Search customer",
+                        hintText: "Search Coupons",
                         borderRadius: 8,
                         borderColor: Theme.of(context).colorScheme.outline,
                         suffixIcon: Icon(
@@ -49,32 +49,13 @@ class ClientPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(width: 10),
-                    CustomButton(
-                      onTap: () {},
-                      title: "",
-                      verticalPadding: 20,
-                      horizontalPadding: 14,
-                      borderRadius: 8,
-                      child: Row(
-                        children: [
-                          Icon(Icons.add, color: Colors.white),
-                          SizedBox(width: 6),
-                          Text(
-                            "Add Customer",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
                   ],
                 ),
               ),
               CustomDivider(),
               Expanded(
                 child: DataTable2(
-                  minWidth: 900,
-                  dataRowHeight: 70,
+                  dataRowHeight: 100,
                   columnSpacing: 12,
                   horizontalMargin: 12,
                   headingTextStyle: TextStyle(
@@ -84,59 +65,54 @@ class ClientPage extends StatelessWidget {
                   ),
                   dividerThickness: 0.1,
                   columns: [
-                    DataColumn2(label: Text("Name"), size: ColumnSize.L),
-                    DataColumn2(label: Text("Mobile No"), size: ColumnSize.S),
-                    DataColumn2(label: Text("Email"), size: ColumnSize.M),
-                    DataColumn2(label: Text("Address"), size: ColumnSize.S),
-                    DataColumn2(label: Text("Actions"), size: ColumnSize.S),
+                    DataColumn2(
+                      label: Center(child: Text("CODE")),
+                      size: ColumnSize.S,
+                    ),
+                    DataColumn2(
+                      label: Center(child: Text("TYPE")),
+                      size: ColumnSize.S,
+                    ),
+                    DataColumn2(
+                      label: Center(child: Text("VALUE")),
+                      size: ColumnSize.S,
+                    ),
+                    DataColumn2(
+                      label: Center(child: Text("USED")),
+                      size: ColumnSize.S,
+                    ),
+                    DataColumn2(
+                      label: Center(child: Text("ACTION")),
+                      fixedWidth: 200,
+                    ),
                   ],
                   rows: List<DataRow>.generate(
-                    10,
+                    4,
                     (index) => DataRow(
                       cells: [
+                        DataCell(Center(child: Text("WELCOME10"))),
+                        DataCell(Center(child: Text("PERCENTAGE"))),
                         DataCell(
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              CircleAvatar(
-                                backgroundColor: AppColors.secondary,
+                          Center(
+                            child: Text(
+                              "${AppConstants.taksSign}20",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.primary,
                               ),
-                              SizedBox(width: 10),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      "Roben Baskey",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    Text(
-                                      "ID: #9",
-                                      style: TextStyle(
-                                        color: AppColors.greyTextColor,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
                         ),
-                        DataCell(Text("01767867")),
-                        DataCell(Text("demo@gmail.com")),
-                        DataCell(Text("Dhaka, Bangladesh")),
+                        DataCell(Center(child: Text("2"))),
                         DataCell(
                           Row(
-                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               IconButton(
                                 onPressed: () {},
                                 icon: Icon(
-                                  Icons.visibility_outlined,
-                                  size: 18,
+                                  FontAwesomeIcons.eye,
+                                  size: 16,
                                   color: AppColors.primary,
                                 ),
                               ),

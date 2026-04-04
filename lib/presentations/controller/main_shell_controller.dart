@@ -3,25 +3,23 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:pos/data/model/shell_model.dart';
 import 'package:pos/presentations/views/ai_reports/ai_reports.dart';
-import 'package:pos/presentations/views/brands/brand_page.dart';
+import 'package:pos/presentations/views/bookings/bookings_page.dart';
 import 'package:pos/presentations/views/categories/category_page.dart';
-import 'package:pos/presentations/views/clients/client_page.dart';
+import 'package:pos/presentations/views/coupon/coupon_page.dart';
 import 'package:pos/presentations/views/dashboard/dashboard.dart';
+import 'package:pos/presentations/views/job_type/job_type.dart';
+import 'package:pos/presentations/views/jobs/jobs.dart';
 import 'package:pos/presentations/views/locations/location_page.dart';
-import 'package:pos/presentations/views/orders/pos_orders.dart';
+import 'package:pos/presentations/views/package/package_page.dart';
 import 'package:pos/presentations/views/payment_methods/payment_methods.dart';
-import 'package:pos/presentations/views/products/product_page.dart';
 import 'package:pos/presentations/views/profile/profile_page.dart';
-import 'package:pos/presentations/views/purchase_order/purchase_order.dart';
-import 'package:pos/presentations/views/purchase_requisition/purchase_requisition.dart';
+import 'package:pos/presentations/views/providers/provider_page.dart';
 import 'package:pos/presentations/views/reports/report_page.dart';
 import 'package:pos/presentations/views/roles/role_page.dart';
 import 'package:pos/presentations/views/settings/settings_page.dart';
-import 'package:pos/presentations/views/stock_movement/stock_movement.dart';
-import 'package:pos/presentations/views/suppliers/suppliers_page.dart';
-import 'package:pos/presentations/views/terminal/pos_terminal.dart';
-import 'package:pos/presentations/views/units/units_page.dart';
-import 'package:pos/presentations/views/users/user_page.dart';
+import 'package:pos/presentations/views/workplace_type/workplace_type_page.dart';
+
+import '../views/customers/customer_page.dart';
 
 class MainShellController extends GetxController {
   var selectedIndex = 0.obs;
@@ -32,18 +30,24 @@ class MainShellController extends GetxController {
       name: "Dashboard",
       page: DashboardPage(),
     ),
-    ShellModel(icon: Icons.monitor, name: "POS Terminals", page: PosTerminal()),
+    //ShellModel(icon: Icons.monitor, name: "POS Terminals", page: PosTerminal()),
+    ShellModel(icon: Icons.badge, name: "Jobs", page: JobsPage()),
     ShellModel(
-      icon: Icons.shopping_cart_outlined,
-      name: "POS Orders",
-      page: PosOrders(),
+      icon: Icons.select_all_rounded,
+      name: "Bookings",
+      page: BookingsPage(),
       isDivider: true,
     ),
     ShellModel(
-      icon: FontAwesomeIcons.boxOpen,
+      icon: FontAwesomeIcons.briefcase,
       size: 18,
-      name: "Products",
-      page: ProductPage(),
+      name: "Job Type",
+      page: JobTypePage(),
+    ),
+    ShellModel(
+      icon: Icons.work_outline,
+      name: "Workplace Type",
+      page: WorkplaceTypePage(),
     ),
     ShellModel(
       icon: Icons.folder_open_rounded,
@@ -51,49 +55,33 @@ class MainShellController extends GetxController {
       page: CategoryPage(),
     ),
     ShellModel(
-      icon: Icons.folder_open_rounded,
-      name: "Units",
-      page: UnitsPage(),
+      icon: Icons.price_change_outlined,
+      name: "Package",
+      page: PackagePage(),
     ),
     ShellModel(
-      icon: Icons.folder_open_rounded,
-      name: "Brands",
-      page: BrandPage(),
+      icon: Icons.local_offer_outlined,
+      name: "Coupen",
+      page: CouponPage(),
       isDivider: true,
     ),
 
     ShellModel(
       icon: FontAwesomeIcons.userCheck,
       size: 18,
-      name: "Clients",
-      page: ClientPage(),
+      name: "Providers",
+      page: ProviderPage(),
     ),
     ShellModel(
-      icon: Icons.folder_open_rounded,
-      name: "Suppliers",
-      page: SuppliersPage(),
-    ),
-    ShellModel(
-      icon: Icons.location_pin,
-      name: "Locations",
-      page: LocationPage(),
-      isDivider: true,
-    ),
-    ShellModel(
-      icon: Icons.bookmark_border_rounded,
-      name: "Purchase Requisition",
-      page: PurchaseRequisition(),
-    ),
-    ShellModel(
-      icon: Icons.bookmark_border_rounded,
-      name: "Purchase Order",
-      page: PurchaseOrder(),
-    ),
-    ShellModel(
-      icon: FontAwesomeIcons.leftRight,
+      icon: FontAwesomeIcons.userCheck,
       size: 18,
-      name: "Stock Movement",
-      page: StockMovement(),
+      name: "Customers",
+      page: CustomerPage(),
+    ),
+    ShellModel(
+      icon: Icons.perm_identity,
+      name: "Identity",
+      page: LocationPage(),
       isDivider: true,
     ),
 
@@ -115,12 +103,6 @@ class MainShellController extends GetxController {
       name: "AI Reports",
       page: AiReports(),
       isDivider: true,
-    ),
-    ShellModel(
-      icon: FontAwesomeIcons.users,
-      size: 18,
-      name: "Users",
-      page: UserPage(),
     ),
     ShellModel(
       icon: Icons.shield_outlined,
