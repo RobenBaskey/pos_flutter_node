@@ -9,10 +9,12 @@ class CustomSelectImageWidget extends StatelessWidget {
     required this.onTap,
     required this.onRemove,
     this.selectedImage,
+    this.isFile = true,
   });
   final Function() onTap;
   final Function() onRemove;
   final String? selectedImage;
+  final bool isFile;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +55,7 @@ class CustomSelectImageWidget extends StatelessWidget {
               Utils.showCustomDialog(
                 context: context,
                 alignment: Alignment.center,
-                child: ImageViewer(path: selectedImage, isFile: true),
+                child: ImageViewer(path: selectedImage, isFile: isFile),
               );
             },
             borderRadius: BorderRadius.circular(12),

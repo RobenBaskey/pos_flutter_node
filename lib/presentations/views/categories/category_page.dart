@@ -312,8 +312,10 @@ class CategoryPage extends GetView<CategoryController> {
                                                                         onPressed: () {
                                                                           showDeleteDialog(
                                                                             context,
-                                                                            catItem.id ??
+                                                                            childItem.id ??
                                                                                 "",
+                                                                            isSubCategory:
+                                                                                true,
                                                                           );
                                                                         },
                                                                         icon: Icon(
@@ -356,7 +358,11 @@ class CategoryPage extends GetView<CategoryController> {
     );
   }
 
-  void showDeleteDialog(BuildContext context, String id) {
+  void showDeleteDialog(
+    BuildContext context,
+    String id, {
+    bool isSubCategory = false,
+  }) {
     Utils.showCustomDialog(
       context: context,
       alignment: Alignment.center,
@@ -372,12 +378,12 @@ class CategoryPage extends GetView<CategoryController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Delete Category",
+                  isSubCategory ? "Delete Sub-Category" : "Delete Category",
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
                 SizedBox(height: 10),
                 Text(
-                  "Are you sure you want to delete this category?",
+                  "Are you sure you want to delete this ${isSubCategory ? "sub-" : ""}category?",
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                 ),
                 SizedBox(height: 20),

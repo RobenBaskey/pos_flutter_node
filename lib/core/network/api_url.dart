@@ -30,4 +30,36 @@ class ApiUrl {
       "$_baseUrl/admin/delete-workplace-type?id=$id";
   static String addWorkplaceTypeUrl() =>
       "$_baseUrl/admin/insert-workplace-type";
+
+  ///package url
+  static String getPackageUrl() => "$_baseUrl/package/packages";
+  static String getSinglePackageUrl(String id) =>
+      "$_baseUrl/package/single-package?id=$id";
+  static String insertPackageUrl() => "$_baseUrl/package/insert-package";
+  static String updatePackageUrl() => "$_baseUrl/package/update-package";
+  static String deletePackageUrl(String id) =>
+      "$_baseUrl/package/delete-package?id=$id";
+  static String insertPackageContentUrl() =>
+      "$_baseUrl/package/insert-package-content";
+  static String updatePackageContentUrl() =>
+      "$_baseUrl/package/update-package-content";
+  static String deletePackageContentUrl({
+    required String packageId,
+    required String contentId,
+  }) =>
+      "$_baseUrl/package/delete-package-content?package_id=$packageId&content_id=$contentId";
+
+  ///coupon
+  static String getCouponUrl() => "$_baseUrl/coupen/all-coupens";
+  static String insertCouponUrl() => "$_baseUrl/coupen/insert-coupen";
+  static String updateCouponUrl() => "$_baseUrl/coupen/update-coupen";
+  static String deleteCouponUrl(String id) =>
+      "$_baseUrl/coupen/delete-coupen?id=$id";
+
+  ///user url
+  static String getUserUrl({
+    required String type,
+    int page = 1,
+    int limit = 10,
+  }) => "$_baseUrl/user/filter-user?user_type=$type&page=$page&limit=$limit";
 }

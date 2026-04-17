@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/state_manager.dart';
-import 'package:pos/domain/entities/package_entity.dart';
-import 'package:pos/presentations/controller/package_controller.dart';
+import 'package:pos/domain/entities/coupon_entity.dart';
+import 'package:pos/presentations/controller/coupon_controller.dart';
 import 'package:pos/presentations/widgets/custom_button.dart';
 import 'package:pos/presentations/widgets/custom_divider.dart';
-import 'package:pos/presentations/widgets/custom_select_image_widget.dart';
 import 'package:pos/presentations/widgets/custom_text_field.dart';
 
 import '../../../../core/theme/app_colors.dart';
 
-class AddPackage extends GetView<PackageController> {
-  const AddPackage({super.key, this.package});
-  final PackageEntity? package;
+class AddCoupon extends GetView<CouponController> {
+  const AddCoupon({super.key, this.coupon});
+  final CouponEntity? coupon;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +28,7 @@ class AddPackage extends GetView<PackageController> {
               child: Row(
                 children: [
                   Text(
-                    package == null ? "Add New Package" : "Edit Package",
+                    coupon == null ? "Add New Coupon" : "Edit Coupon",
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
                   ),
                   Spacer(),
@@ -49,61 +48,61 @@ class AddPackage extends GetView<PackageController> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Pakcage Name *"),
+                  Text("Coupon Code *"),
                   SizedBox(height: 8),
                   CustomTextField(
-                    controller: controller.packageNameController,
-                    hintText: "Enter Package Name",
+                    controller: controller.codeController,
+                    hintText: "Enter Coupon Code",
                     borderRadius: 8,
                     borderColor: Theme.of(context).colorScheme.outline,
                   ),
                   SizedBox(height: 20),
-                  Text("Pakcage Price *"),
+                  Text("Discount Value *"),
                   SizedBox(height: 8),
                   CustomTextField(
-                    controller: controller.packagePriceController,
-                    hintText: "Enter Package Price",
+                    controller: controller.discountValueController,
+                    hintText: "Enter Discount Value",
                     borderRadius: 8,
                     borderColor: Theme.of(context).colorScheme.outline,
                     inputType: TextInputType.number,
                     inputFormatter: [FilteringTextInputFormatter.digitsOnly],
                   ),
                   SizedBox(height: 20),
-                  Text("Package Type *"),
+                  Text("Discount Type *"),
                   SizedBox(height: 8),
                   Row(
                     children: [
                       Expanded(
-                        child: _packgeTimeType(
-                          context,
-                          isMonthly: true,
-                        ),
+                        child: _packgeTimeType(context, isMonthly: true),
                       ),
                       SizedBox(width: 12),
                       Expanded(
-                        child: _packgeTimeType(
-                          context,
-                          isMonthly: false,
-                        ),
+                        child: _packgeTimeType(context, isMonthly: false),
                       ),
                     ],
                   ),
                   SizedBox(height: 20),
-                  Text("Image *"),
+                  Text("Used Limit*"),
                   SizedBox(height: 8),
-                  Obx(
-                    () => CustomSelectImageWidget(
-                      onTap: () {
-                        controller.pickImage();
-                      },
-                      onRemove: () {
-                        controller.packageImage.value = null;
-                      },
-                      selectedImage: controller.packageImage.value,
-                      isFile: package == null,
-                    ),
+                  CustomTextField(
+                    controller: controller.usageLimitController,
+                    hintText: "Enter Used Limit",
+                    borderRadius: 8,
+                    borderColor: Theme.of(context).colorScheme.outline,
+                    inputType: TextInputType.number,
+                    inputFormatter: [FilteringTextInputFormatter.digitsOnly],
                   ),
-
+                  SizedBox(height: 20),
+                  Text("Min Order Value *"),
+                  SizedBox(height: 8),
+                  CustomTextField(
+                    controller: controller.minOrderValueController,
+                    hintText: "Enter Min Order Value",
+                    borderRadius: 8,
+                    borderColor: Theme.of(context).colorScheme.outline,
+                    inputType: TextInputType.number,
+                    inputFormatter: [FilteringTextInputFormatter.digitsOnly],
+                  ),
                   SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -124,14 +123,16 @@ class AddPackage extends GetView<PackageController> {
                       Obx(
                         () => CustomButton(
                           onTap: () {
-                            if (package == null) {
-                              controller.addPackage();
+                            if (coupon == null) {
+                              controller.addCoupon();
                             } else {
-                              controller.updatePackage();
+                              controller.editCoupon(coupon?.id ?? "");
                             }
                           },
-                          isLoading: controller.isPackageAdding.value,
-                          title: "Save Package",
+                          isLoading: controller.isCouponAdding.value,
+                          title: coupon == null
+                              ? "Save Coupon"
+                              : "Update Coupon",
                         ),
                       ),
                     ],
@@ -149,14 +150,14 @@ class AddPackage extends GetView<PackageController> {
   Widget _packgeTimeType(BuildContext context, {bool isMonthly = false}) {
     return InkWell(
       onTap: () {
-        controller.isMonthly.value = isMonthly;
+        controller.isPercentage.value = isMonthly;
       },
       borderRadius: BorderRadius.circular(8),
       child: Obx(
         () => Container(
           padding: EdgeInsets.symmetric(vertical: 12, horizontal: 8),
           decoration: BoxDecoration(
-            border: controller.isMonthly.value == isMonthly
+            border: controller.isPercentage.value == isMonthly
                 ? Border.all(color: AppColors.primary)
                 : Border.all(color: Theme.of(context).colorScheme.outline),
             borderRadius: BorderRadius.circular(8),
@@ -165,12 +166,12 @@ class AddPackage extends GetView<PackageController> {
             children: [
               CircleAvatar(
                 radius: 8,
-                backgroundColor: controller.isMonthly.value == isMonthly
+                backgroundColor: controller.isPercentage.value == isMonthly
                     ? Theme.of(context).primaryColor
                     : Colors.grey.withValues(alpha: 0.4),
               ),
               Expanded(
-                child: Center(child: Text(isMonthly ? "Monthly" : "Yearly")),
+                child: Center(child: Text(isMonthly ? "Percentage" : "Fixed")),
               ),
             ],
           ),

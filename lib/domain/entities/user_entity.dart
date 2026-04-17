@@ -1,30 +1,29 @@
-import '../../data/model/user_model.dart';
 
 class UserEntity {
-  final int id;
-  final String phone;
-  final String name;
-  final String image;
-  final String role;
-  final String email;
+  final String? id;
+  final bool? verified;
+  final String? firstName;
+  final String? lastName;
+  final String? phone;
+  final dynamic address;
+  final String? bio;
+  final String? image;
+  final String? companyName;
+  final int? averageRating;
+  final int? ratingCount;
 
   UserEntity({
-    required this.id,
-    required this.phone,
-    required this.name,
-    required this.image,
-    required this.role,
-    required this.email,
+    this.id,
+    this.verified,
+    this.firstName,
+    this.lastName,
+    this.phone,
+    this.address,
+    this.bio,
+    this.image,
+    this.companyName,
+    this.averageRating,
+    this.ratingCount,
   });
 
-  UserModel toModel() {
-    return UserModel(
-      id: id,
-      phone: phone,
-      name: name,
-      role: role,
-      image: image,
-      email: email,
-    );
-  }
 }

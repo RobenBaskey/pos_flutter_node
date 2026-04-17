@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pos/core/constants/enum.dart';
 import 'package:pos/core/utils/utils.dart';
 import 'package:pos/domain/entities/category_entity.dart';
 import 'package:pos/domain/repos/category_repo.dart';
@@ -74,7 +75,11 @@ class CategoryController extends GetxController {
         categoryDescriptionController.clear();
         selectedImagePath.value = null;
         Get.back(); // Close the add category dialog
-        Utils.showSnackBar("Category added successfully");
+        Utils.showSnackBar(
+          "Category added successfully",
+          title: "Success",
+          type: SnackBarType.success,
+        );
         getCategories(isLoading: false);
       }
     } catch (e) {
@@ -90,7 +95,7 @@ class CategoryController extends GetxController {
       var result = await _categoryRepo.deleteCategory(id);
       if (result) {
         Get.back(); // Close the add category dialog
-        Utils.showSnackBar("Category deleted successfully");
+        Utils.showSnackBar("Category deleted successfully", isSuccess: true);
         getCategories(isLoading: false);
       }
     } on Exception catch (e) {
@@ -118,7 +123,7 @@ class CategoryController extends GetxController {
         updateDescriptionController.clear();
         selectedImagePath.value = null;
         Get.back(); // Close the add category dialog
-        Utils.showSnackBar("Category updated successfully");
+        Utils.showSnackBar("Category updated successfully", isSuccess: true);
         getCategories(isLoading: false);
       }
     } catch (e) {

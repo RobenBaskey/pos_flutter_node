@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pos/core/network/api_url.dart';
 import 'package:pos/presentations/widgets/custom_image.dart';
 
 import '../../core/theme/app_colors.dart';
@@ -18,7 +19,13 @@ class ImageViewer extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         child: Stack(
           children: [
-            Center(child: CustomImage(path: path, isFile: isFile, fit: BoxFit.contain)),
+            Center(
+              child: CustomImage(
+                path: isFile ? path : ApiUrl.getImageBaseUrl() + path!,
+                isFile: isFile,
+                fit: BoxFit.contain,
+              ),
+            ),
             Positioned(
               top: 8,
               right: 8,

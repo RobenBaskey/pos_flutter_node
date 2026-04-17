@@ -2,7 +2,8 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:pos/core/constants/app_constants.dart';
+import 'package:pos/presentations/controller/coupon_controller.dart';
+import 'package:pos/presentations/views/coupon/component/add_coupon.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/utils.dart';
@@ -11,7 +12,7 @@ import '../../widgets/custom_container_shape.dart';
 import '../../widgets/custom_divider.dart';
 import '../../widgets/custom_text_field.dart';
 
-class CouponPage extends StatelessWidget {
+class CouponPage extends GetView<CouponController> {
   const CouponPage({super.key});
 
   @override
@@ -40,8 +41,24 @@ class CouponPage extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 10),
+                    IconButton(
+                      onPressed: () {
+                        controller.getCoupons();
+                      },
+                      icon: Icon(Icons.replay_outlined),
+                    ),
+                    SizedBox(width: 10),
                     CustomButton(
-                      onTap: () {},
+                      onTap: () {
+                        Utils.showCustomDialog(
+                          context: context,
+                          alignment: Alignment.center,
+                          bearerColor: Theme.of(
+                            context,
+                          ).colorScheme.outline.withValues(alpha: 0.4),
+                          child: AddCoupon(),
+                        );
+                      },
                       title: "",
                       verticalPadding: 20,
                       horizontalPadding: 14,
@@ -68,6 +85,9 @@ class CouponPage extends StatelessWidget {
                           Icons.search,
                           color: AppColors.greyLightTextColor,
                         ),
+                        onChanged: (value) {
+                          controller.searchCoupon(value);
+                        },
                       ),
                     ),
                   ],
@@ -75,99 +95,150 @@ class CouponPage extends StatelessWidget {
               ),
               CustomDivider(),
               Expanded(
-                child: DataTable2(
-                  dataRowHeight: 100,
-                  columnSpacing: 12,
-                  horizontalMargin: 12,
-                  headingTextStyle: TextStyle(
-                    color: AppColors.greyLightTextColor,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  dividerThickness: 0.1,
-                  columns: [
-                    DataColumn2(
-                      label: Center(child: Text("CODE")),
-                      size: ColumnSize.S,
-                    ),
-                    DataColumn2(
-                      label: Center(child: Text("TYPE")),
-                      size: ColumnSize.S,
-                    ),
-                    DataColumn2(
-                      label: Center(child: Text("VALUE")),
-                      size: ColumnSize.S,
-                    ),
-                    DataColumn2(
-                      label: Center(child: Text("USED")),
-                      size: ColumnSize.S,
-                    ),
-                    DataColumn2(
-                      label: Center(child: Text("ACTION")),
-                      fixedWidth: 200,
-                    ),
-                  ],
-                  rows: List<DataRow>.generate(
-                    4,
-                    (index) => DataRow(
-                      cells: [
-                        DataCell(Center(child: Text("WELCOME10"))),
-                        DataCell(Center(child: Text("PERCENTAGE"))),
-                        DataCell(
-                          Center(
-                            child: Text(
-                              "${AppConstants.taksSign}20",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.primary,
-                              ),
+                child: Obx(
+                  () => controller.isLoading.value
+                      ? Center(child: CircularProgressIndicator())
+                      : DataTable2(
+                          dataRowHeight: 100,
+                          columnSpacing: 12,
+                          horizontalMargin: 12,
+                          headingTextStyle: TextStyle(
+                            color: AppColors.greyLightTextColor,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          dividerThickness: 0.1,
+                          columns: [
+                            DataColumn2(
+                              label: Center(child: Text("CODE")),
+                              size: ColumnSize.S,
                             ),
+                            DataColumn2(
+                              label: Center(child: Text("TYPE")),
+                              size: ColumnSize.S,
+                            ),
+                            DataColumn2(
+                              label: Center(child: Text("DISCOUNT")),
+                              size: ColumnSize.S,
+                            ),
+                            DataColumn2(
+                              label: Center(child: Text("LIMIT")),
+                              size: ColumnSize.S,
+                            ),
+                            DataColumn2(
+                              label: Center(child: Text("USED")),
+                              size: ColumnSize.S,
+                            ),
+                            DataColumn2(
+                              label: Center(child: Text("ACTION")),
+                              fixedWidth: 200,
+                            ),
+                          ],
+                          rows: List<DataRow>.generate(
+                            controller.searchedCouponList.length,
+                            (index) {
+                              var coupon = controller.searchedCouponList[index];
+                              return DataRow(
+                                cells: [
+                                  DataCell(
+                                    Center(child: Text(coupon.code ?? "")),
+                                  ),
+                                  DataCell(
+                                    Center(
+                                      child: Text(
+                                        (coupon.discountType ?? "")
+                                            .toUpperCase(),
+                                      ),
+                                    ),
+                                  ),
+                                  DataCell(
+                                    Center(
+                                      child: Text(
+                                        "${coupon.discountValue ?? 0}${coupon.discountType == "percentage" ? "%" : "৳"}",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: AppColors.primary,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  DataCell(
+                                    Center(
+                                      child: Text(
+                                        coupon.usageLimit?.toString() ?? "0",
+                                      ),
+                                    ),
+                                  ),
+                                  DataCell(
+                                    Center(
+                                      child: Text(
+                                        coupon.usageCount?.toString() ?? "0",
+                                      ),
+                                    ),
+                                  ),
+                                  DataCell(
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        IconButton(
+                                          onPressed: () {},
+                                          icon: Icon(
+                                            FontAwesomeIcons.eye,
+                                            size: 16,
+                                            color: AppColors.primary,
+                                          ),
+                                        ),
+                                        IconButton(
+                                          onPressed: () {
+                                            controller.initEdit(coupon);
+                                            Utils.showCustomDialog(
+                                              context: context,
+                                              isDissmissable: false,
+                                              alignment: Alignment.center,
+                                              bearerColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .outline
+                                                  .withValues(alpha: 0.4),
+                                              child: AddCoupon(coupon: coupon),
+                                            );
+                                          },
+                                          icon: Icon(
+                                            FontAwesomeIcons.penToSquare,
+                                            size: 16,
+                                            color: AppColors.secondary,
+                                          ),
+                                        ),
+                                        IconButton(
+                                          onPressed: () {
+                                            Utils.showDeleteDialog(
+                                              context,
+                                              onYesTap: () {
+                                                controller.deleteCoupon(
+                                                  coupon.id ?? "",
+                                                );
+                                              },
+                                              isLoading:
+                                                  controller.isCouponDeleting,
+                                              title: "Delete Coupon",
+                                              description:
+                                                  "Do you want to delete this coupon?",
+                                            );
+                                          },
+                                          icon: Icon(
+                                            Icons.delete,
+                                            size: 18,
+                                            color: AppColors.warningColor,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
                           ),
                         ),
-                        DataCell(Center(child: Text("2"))),
-                        DataCell(
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  FontAwesomeIcons.eye,
-                                  size: 16,
-                                  color: AppColors.primary,
-                                ),
-                              ),
-                              IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  FontAwesomeIcons.penToSquare,
-                                  size: 16,
-                                  color: AppColors.secondary,
-                                ),
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  Utils.showDeleteDialog(
-                                    context,
-                                    onYesTap: () {},
-                                    isLoading: false.obs,
-                                    title: "Delete Coupon",
-                                    description:
-                                        "Do you want to delete this coupon?",
-                                  );
-                                },
-                                icon: Icon(
-                                  Icons.delete,
-                                  size: 18,
-                                  color: AppColors.warningColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                 ),
               ),
             ],

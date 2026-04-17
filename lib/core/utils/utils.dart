@@ -41,34 +41,39 @@ class Utils {
     String title = "Warning",
     SnackBarType type = SnackBarType.warning,
     bool isDismissible = true,
+    bool isSuccess = false,
   }) {
     Color backgroundColor;
     Color textColor = Colors.white;
 
-    switch (type) {
-      case SnackBarType.error:
-        backgroundColor = Colors.red.shade600;
-        break;
-      case SnackBarType.warning:
-        backgroundColor = Colors.orange.shade600;
-        break;
-      case SnackBarType.success:
-        backgroundColor = Colors.green.shade600;
-        break;
+    if (isSuccess) {
+      backgroundColor = Colors.green.shade600;
+    } else {
+      switch (type) {
+        case SnackBarType.error:
+          backgroundColor = Colors.red.shade600;
+          break;
+        case SnackBarType.warning:
+          backgroundColor = Colors.orange.shade600;
+          break;
+        case SnackBarType.success:
+          backgroundColor = Colors.green.shade600;
+          break;
+      }
     }
 
     Get.snackbar(
-      title,
+      isSuccess ? "Success" : title,
       message,
       maxWidth: 400,
       margin: const EdgeInsets.all(16),
       backgroundColor: backgroundColor,
       colorText: textColor,
       isDismissible: isDismissible,
-      duration: const Duration(seconds: 3),
+      duration: Duration(seconds: isDismissible ? 3 : 300),
 
       // Dismiss button
-      mainButton: isDismissible
+      mainButton: !isDismissible
           ? TextButton(
               onPressed: () => Get.closeCurrentSnackbar(),
               child: const Text(

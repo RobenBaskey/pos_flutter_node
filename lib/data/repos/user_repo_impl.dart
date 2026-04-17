@@ -1,4 +1,5 @@
 import 'package:pos/data/datasource/local_db/user_db_service.dart';
+import 'package:pos/data/mapper/user_mapper.dart';
 import 'package:pos/domain/entities/user_entity.dart';
 import 'package:pos/domain/repos/user_repo.dart';
 
