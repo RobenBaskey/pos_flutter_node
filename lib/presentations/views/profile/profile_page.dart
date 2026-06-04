@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pos/core/theme/app_colors.dart';
+import 'package:pos/presentations/controller/user_controller.dart';
 
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_container_shape.dart';
 import '../../widgets/custom_divider.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends GetView<UserController> {
   const ProfilePage({super.key});
 
   @override
@@ -113,18 +115,12 @@ class ProfilePage extends StatelessWidget {
                           ),
                           SizedBox(width: 14),
                           Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "KGB Admin",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                Text("kgb_admin"),
-                              ],
+                            child: Text(
+                              controller.users.value?.fullName ?? "Admin Name",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
                             ),
                           ),
                         ],
@@ -137,18 +133,21 @@ class ProfilePage extends StatelessWidget {
                               children: [
                                 _profileItem(
                                   context,
-                                  title: "Email Address",
-                                  icon: Icons.mail_outline,
-                                  data: "example@gmail.com",
+                                  title: "Phone Number",
+                                  icon: Icons.phone_outlined,
+                                  data:
+                                      controller.users.value?.phone ??
+                                      "Phone Number",
                                 ),
                                 SizedBox(height: 30),
                                 _profileItem(
                                   context,
                                   title: "Member Since",
                                   icon: Icons.calendar_today_outlined,
-                                  data: DateFormat(
-                                    "dd-MM-yyyy",
-                                  ).format(DateTime.now()),
+                                  data: DateFormat("dd-MM-yyyy").format(
+                                    controller.users.value?.createdAt ??
+                                        DateTime.now(),
+                                  ),
                                 ),
                               ],
                             ),
@@ -159,18 +158,21 @@ class ProfilePage extends StatelessWidget {
                               children: [
                                 _profileItem(
                                   context,
-                                  title: "Username",
-                                  icon: Icons.mail_outline,
-                                  data: "kgb_admin",
+                                  title: "Role",
+                                  icon: Icons.security_rounded,
+                                  data:
+                                      controller.users.value?.role ??
+                                      "kgb_admin",
                                 ),
                                 SizedBox(height: 30),
                                 _profileItem(
                                   context,
                                   title: "Last Updated",
                                   icon: Icons.calendar_today_outlined,
-                                  data: DateFormat(
-                                    "dd-MM-yyyy",
-                                  ).format(DateTime.now()),
+                                  data: DateFormat("dd-MM-yyyy").format(
+                                    controller.users.value?.updatedAt ??
+                                        DateTime.now(),
+                                  ),
                                 ),
                               ],
                             ),

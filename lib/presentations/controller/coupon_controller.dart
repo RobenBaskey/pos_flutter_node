@@ -61,7 +61,12 @@ class CouponController extends GetxController {
         minOrderValue: int.tryParse(minOrderValueController.text) ?? 0,
       );
       await couponRepo.addCoupen(coupon: newCoupon);
-      Utils.showSnackBar('Coupon added successfully', title: 'Success');
+      Get.back();
+      Utils.showSnackBar(
+        'Coupon added successfully',
+        title: 'Success',
+        type: SnackBarType.success,
+      );
       getCoupons(); // Refresh the coupon list after adding
     } catch (e) {
       Get.snackbar('Error', 'Failed to add coupon: $e');

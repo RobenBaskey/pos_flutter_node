@@ -6,8 +6,8 @@ class JobTypeRepoImpl extends JobTypeRepo {
   final JobTypeSource _source;
   JobTypeRepoImpl(this._source);
   @override
-  Future<bool> addJobType({required String title}) {
-    return _source.addJobType(title: title);
+  Future<bool> addJobType({required String title, required bool isActive}) {
+    return _source.addJobType(title: title, isActive: isActive);
   }
 
   @override
@@ -19,7 +19,7 @@ class JobTypeRepoImpl extends JobTypeRepo {
   Future<bool> updateJobType({
     required String id,
     required String title,
-    String isActive = "1",
+    bool? isActive,
   }) {
     return _source.updateJobType(id: id, title: title, isActive: isActive);
   }

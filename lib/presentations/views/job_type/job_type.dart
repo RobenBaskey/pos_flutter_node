@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:pos/core/utils/utils.dart';
 import 'package:pos/presentations/controller/job_type_controller.dart';
 import 'package:pos/presentations/widgets/custom_button.dart';
+import 'package:pos/presentations/widgets/refresh_button_widget.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../widgets/custom_container_shape.dart';
@@ -40,9 +41,18 @@ class JobTypePage extends GetView<JobTypeController> {
                       ),
                     ),
                     SizedBox(width: 10),
+                    RefreshButtonWidget(
+                      onRefresh: () {
+                        controller.getJobTypes();
+                      },
+                    ),
+                    SizedBox(width: 10),
                     SizedBox(
                       width: 260,
                       child: CustomTextField(
+                        onChanged: (value) {
+                          controller.onSearch(value);
+                        },
                         hintText: "Search Job Type",
                         borderRadius: 8,
                         borderColor: Theme.of(context).colorScheme.outline,
@@ -74,6 +84,21 @@ class JobTypePage extends GetView<JobTypeController> {
                               borderColor: Theme.of(
                                 context,
                               ).colorScheme.outline,
+                            ),
+                            SizedBox(height: 30),
+                            Row(
+                              children: [
+                                Expanded(child: Text("Active Status")),
+                                SizedBox(width: 4),
+                                Obx(
+                                  () => Switch(
+                                    value: controller.isActive.value,
+                                    onChanged: (v) {
+                                      controller.isActive(v);
+                                    },
+                                  ),
+                                ),
+                              ],
                             ),
                             SizedBox(height: 30),
                             Row(
@@ -137,18 +162,37 @@ class JobTypePage extends GetView<JobTypeController> {
                                     size: ColumnSize.M,
                                   ),
                                   DataColumn2(
+                                    label: Center(child: Text("STATUS")),
+                                    size: ColumnSize.S,
+                                  ),
+                                  DataColumn2(
                                     label: Center(child: Text("ACTION")),
                                     fixedWidth: 200,
                                   ),
                                 ],
                                 rows: List<DataRow>.generate(
-                                  controller.jobList.length,
+                                  controller.searchJobTypeList.length,
                                   (index) {
-                                    var job = controller.jobList[index];
+                                    var job =
+                                        controller.searchJobTypeList[index];
                                     return DataRow(
                                       cells: [
                                         DataCell(
                                           Center(child: Text(job.title ?? "")),
+                                        ),
+                                        DataCell(
+                                          Center(
+                                            child: Text(
+                                              job.status == true
+                                                  ? "Active"
+                                                  : "In-active",
+                                              style: TextStyle(
+                                                color: job.status == true
+                                                    ? AppColors.primary
+                                                    : AppColors.greyTextColor,
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                         DataCell(
                                           Row(
@@ -157,14 +201,7 @@ class JobTypePage extends GetView<JobTypeController> {
                                             children: [
                                               IconButton(
                                                 onPressed: () {
-                                                  controller
-                                                          .typeNameController
-                                                          .text =
-                                                      job.title ?? "";
-                                                  controller
-                                                          .selectedJobType
-                                                          .value =
-                                                      job;
+                                                  controller.initUpdate(job);
                                                 },
                                                 icon: Icon(
                                                   FontAwesomeIcons.penToSquare,
@@ -182,10 +219,12 @@ class JobTypePage extends GetView<JobTypeController> {
                                                             job.id ?? "",
                                                           );
                                                     },
-                                                    isLoading: controller.isDeleting,
-                                                    
+                                                    isLoading:
+                                                        controller.isDeleting,
+
                                                     title: "Delete Job Type",
-                                                    description: "De you want to delete this job type?",
+                                                    description:
+                                                        "De you want to delete this job type?",
                                                   );
                                                 },
                                                 icon: Icon(

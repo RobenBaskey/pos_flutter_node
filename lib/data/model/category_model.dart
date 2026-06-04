@@ -7,7 +7,7 @@ class CategoryModel extends CategoryEntity {
     super.image,
     super.isSubcategory,
     super.categoryId,
-    super.isActive,
+    super.status,
     super.createdAt,
     super.updatedAt,
     super.children,
@@ -20,7 +20,7 @@ class CategoryModel extends CategoryEntity {
       image: json['image'] as String?,
       isSubcategory: json['is_subcategory'] as bool?,
       categoryId: json['category_id'] as String?,
-      isActive: json['is_active'] as bool?,
+      status: json['status'] as bool?,
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'])
           : null,

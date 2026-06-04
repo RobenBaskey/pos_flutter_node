@@ -6,11 +6,12 @@ abstract class WorkplaceTypeSource {
   Future<bool> addWorkplaceType({
     required String title,
     required String description,
+    bool? isActive,
   });
   Future<bool> updateWorkplaceType({
     required String id,
     required String title,
-    String isActive = "1",
+    bool? isActive,
   });
   Future<bool> deleteWorkplaceType({required String id});
   Future<List<JobTypeModel>> getWorkplaceTypes();
@@ -24,11 +25,12 @@ class WorkplaceTypeSourceImpl extends WorkplaceTypeSource {
   Future<bool> addWorkplaceType({
     required String title,
     required String description,
+    bool? isActive,
   }) async {
     try {
       await _clients.post(
         url: ApiUrl.addWorkplaceTypeUrl(),
-        body: {"title": title, "description": "demo"},
+        body: {"title": title, "description": "demo", "status": isActive},
         isTokenRequired: true,
       );
       return true;
@@ -54,12 +56,12 @@ class WorkplaceTypeSourceImpl extends WorkplaceTypeSource {
   Future<bool> updateWorkplaceType({
     required String id,
     required String title,
-    String isActive = "1",
+    bool? isActive,
   }) async {
     try {
       await _clients.put(
         url: ApiUrl.updateWorkplaceTypeUrl(),
-        body: {"id": id, "title": title, "is_active": isActive},
+        body: {"id": id, "title": title, "status": isActive},
         isTokenRequired: true,
       );
       return true;

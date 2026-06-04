@@ -65,8 +65,26 @@ class UpdateCategory extends GetView<CategoryController> {
                       onRemove: () {
                         controller.selectedImagePath.value = null;
                       },
-                      selectedImage: controller.selectedImagePath.value,
+                      selectedImage:
+                          controller.selectedImagePath.value ??
+                          controller.selectedCategoryEntity.value?.image,
+                      isFile: controller.selectedImagePath.value != null,
                     ),
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(child: Text("Active Status *")),
+                      SizedBox(width: 8),
+                      Obx(
+                        () => Switch(
+                          value: controller.isStatusActive.value,
+                          onChanged: (v) {
+                            controller.isStatusActive.value = v;
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 20),
                   Text("Description"),

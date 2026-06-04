@@ -185,6 +185,7 @@ class PackagePage extends GetView<PackageController> {
                                       children: [
                                         IconButton(
                                           onPressed: () {
+                                            controller.selectedContentId(null);
                                             Utils.showCustomDialog(
                                               context: context,
                                               alignment: Alignment.centerRight,

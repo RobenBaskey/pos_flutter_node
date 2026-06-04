@@ -42,11 +42,12 @@ class PackageModel extends PackageEntity {
 }
 
 class ContentModel extends ContentEntity {
-  ContentModel({super.id, super.name, super.isActive});
+  ContentModel({super.id, super.name, super.isActive, super.limit});
 
   factory ContentModel.fromJson(Map<String, dynamic> json) => ContentModel(
     id: json["_id"],
     name: json["name"],
     isActive: json["is_active"],
+    limit: json["limit"],
   );
 }

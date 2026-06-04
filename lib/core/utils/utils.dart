@@ -8,7 +8,9 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pos/data/datasource/local_db/shared_preference_service.dart';
 
+import '../../presentations/controller/user_controller.dart';
 import '../../presentations/widgets/custom_button.dart';
+import '../../presentations/widgets/image_viewer.dart';
 import '../constants/enum.dart';
 import '../theme/app_colors.dart';
 
@@ -156,15 +158,18 @@ class Utils {
     required RxBool isLoading,
     required String title,
     required String description,
+    String? yesButtonText,
   }) {
     Utils.showCustomDialog(
       context: context,
       alignment: Alignment.center,
-      bearerColor: Theme.of(context).colorScheme.outline.withValues(alpha: 0.4),
+
+      bearerColor: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
       child: SizedBox(
         width: 280,
         child: Material(
           borderRadius: BorderRadius.circular(8),
+          color: Theme.of(context).scaffoldBackgroundColor,
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Column(
@@ -201,7 +206,7 @@ class Utils {
                       () => CustomButton(
                         onTap: onYesTap,
                         isLoading: isLoading.value,
-                        title: "Delete",
+                        title: yesButtonText ?? "Delete",
                         verticalPadding: 12,
                         horizontalPadding: 20,
                         borderRadius: 8,
@@ -216,5 +221,64 @@ class Utils {
         ),
       ),
     );
+  }
+
+  static String formatRole(String role) {
+    switch (role) {
+      case "super_admin":
+        return "Super Admin";
+      case "admin":
+        return "Admin";
+      case "moderator":
+        return "Moderator";
+      case "manager":
+        return "Manager";
+      default:
+        return role;
+    }
+  }
+
+  static UserRole formatRoleType(String role) {
+    switch (role) {
+      case "super_admin":
+        return UserRole.super_admin;
+      case "admin":
+        return UserRole.admin;
+      case "moderator":
+        return UserRole.moderator;
+      case "manager":
+        return UserRole.manager;
+      default:
+        return UserRole.admin; // Default to admin if role is unrecognized
+    }
+  }
+
+  static bool isSuperAdmin() {
+    return Get.find<UserController>().userType.value == UserRole.super_admin;
+  }
+
+  static void showImageViewer(
+    BuildContext context, {
+    required String selectedImage,
+    required bool isFile,
+  }) {
+    showCustomDialog(
+      context: context,
+      alignment: Alignment.center,
+      child: ImageViewer(path: selectedImage, isFile: isFile),
+    );
+  }
+
+  static Color getStatusColor(String status) {
+    switch (status.toLowerCase()) {
+      case "pending":
+        return Colors.orange;
+      case "verified":
+        return Colors.green;
+      case "rejected":
+        return Colors.red;
+      default:
+        return Colors.grey;
+    }
   }
 }

@@ -11,15 +11,17 @@ class JobTypeController extends GetxController {
   JobTypeController(this._repo);
 
   var isJobTypeLoading = false.obs;
-  var jobList = <JobTypeEntity>[].obs;
+  var jobList = <JobTypeEntity>[];
+  var searchJobTypeList = <JobTypeEntity>[].obs;
 
   final TextEditingController typeNameController = TextEditingController();
+  var isActive = true.obs;
   var isAdding = false.obs;
 
   //edit job type
   var selectedJobType = Rxn<JobTypeEntity>();
 
-    //delete job type
+  //delete job type
   var isDeleting = false.obs;
 
   @override
@@ -32,7 +34,8 @@ class JobTypeController extends GetxController {
     try {
       if (isLoadingActive) isJobTypeLoading(true);
       var result = await _repo.getJobTypes();
-      jobList.value = result;
+      jobList = result;
+      searchJobTypeList.value = result;
     } on Exception catch (e) {
       debugPrint("Error to get job type. Exception ${e.toString()}");
     } finally {
@@ -48,7 +51,10 @@ class JobTypeController extends GetxController {
 
     isAdding(true);
     try {
-      await _repo.addJobType(title: typeNameController.text);
+      await _repo.addJobType(
+        title: typeNameController.text,
+        isActive: isActive.value,
+      );
       typeNameController.clear();
       getJobTypes(isLoadingActive: false);
       Utils.showSnackBar(
@@ -60,6 +66,12 @@ class JobTypeController extends GetxController {
     } finally {
       isAdding(false);
     }
+  }
+
+  void initUpdate(JobTypeEntity item) {
+    selectedJobType.value = item;
+    typeNameController.text = item.title ?? "";
+    isActive.value = item.status == true;
   }
 
   Future updateJobType() async {
@@ -75,11 +87,16 @@ class JobTypeController extends GetxController {
 
     isAdding(true);
     try {
-      await _repo.addJobType(title: typeNameController.text);
+      await _repo.updateJobType(
+        id: selectedJobType.value?.id ?? "",
+        title: typeNameController.text,
+        isActive: isActive.value,
+      );
       typeNameController.clear();
+      selectedJobType.value = null;
       getJobTypes(isLoadingActive: false);
       Utils.showSnackBar(
-        "Job type added successfully.",
+        "Job type updated successfully.",
         type: SnackBarType.success,
       );
     } on Exception catch (e) {
@@ -99,6 +116,19 @@ class JobTypeController extends GetxController {
       debugPrint("Error to delete. Exception ${e.toString()}");
     } finally {
       isDeleting(false);
+    }
+  }
+
+  void onSearch(String value) {
+    if (value.isEmpty) {
+      searchJobTypeList.value = jobList;
+    } else {
+      searchJobTypeList.value = jobList
+          .where(
+            (e) =>
+                e.title?.toLowerCase().contains(value.toLowerCase()) ?? false,
+          )
+          .toList();
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:get/get.dart';
 import 'package:pos/core/constants/app_sizes.dart';
 import 'package:pos/core/service/init_services.dart';
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
     AppSizes().init(context);
     return GetMaterialApp(
       title: "জনশক্তি",
+      localizationsDelegates: [FlutterQuillLocalizations.delegate],
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,

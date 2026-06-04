@@ -116,6 +116,21 @@ class AddCategory extends GetView<CategoryController> {
                     ),
                   ),
                   SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(child: Text("Active Status *")),
+                      SizedBox(width: 8),
+                      Obx(
+                        () => Switch(
+                          value: controller.isStatusActive.value,
+                          onChanged: (v) {
+                            controller.isStatusActive.value = v;
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
                   Text("Description"),
                   SizedBox(height: 8),
                   CustomTextField(

@@ -7,9 +7,9 @@ import 'package:pos/presentations/views/bookings/bookings_page.dart';
 import 'package:pos/presentations/views/categories/category_page.dart';
 import 'package:pos/presentations/views/coupon/coupon_page.dart';
 import 'package:pos/presentations/views/dashboard/dashboard.dart';
+import 'package:pos/presentations/views/identity/identity_page.dart';
 import 'package:pos/presentations/views/job_type/job_type.dart';
 import 'package:pos/presentations/views/jobs/jobs.dart';
-import 'package:pos/presentations/views/locations/location_page.dart';
 import 'package:pos/presentations/views/package/package_page.dart';
 import 'package:pos/presentations/views/payment_methods/payment_methods.dart';
 import 'package:pos/presentations/views/profile/profile_page.dart';
@@ -22,6 +22,7 @@ import 'package:pos/presentations/views/workplace_type/workplace_type_page.dart'
 import '../views/customers/customer_page.dart';
 
 class MainShellController extends GetxController {
+  var isMinimized = false.obs;
   var selectedIndex = 0.obs;
 
   var shellItemList = <ShellModel>[
@@ -81,7 +82,7 @@ class MainShellController extends GetxController {
     ShellModel(
       icon: Icons.perm_identity,
       name: "Identity",
-      page: LocationPage(),
+      page: IdentityPage(),
       isDivider: true,
     ),
 

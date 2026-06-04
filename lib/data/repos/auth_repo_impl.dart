@@ -1,3 +1,4 @@
+import 'package:pos/data/model/auth_model.dart';
 import 'package:pos/domain/repos/auth_repo.dart';
 
 import '../datasource/remote_db/auth_db_source.dart';
@@ -7,7 +8,7 @@ class AuthRepoImpl extends AuthRepo {
   AuthRepoImpl(this._authRemoteDB);
 
   @override
-  Future<String?> login(String phone, String password) async {
+  Future<AuthModel?> login(String phone, String password) async {
     return _authRemoteDB.login(phone, password);
   }
 }

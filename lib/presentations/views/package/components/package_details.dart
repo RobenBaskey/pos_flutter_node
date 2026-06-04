@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:pos/core/constants/app_sizes.dart';
 import 'package:pos/core/theme/app_colors.dart';
@@ -80,51 +81,70 @@ class _PackageDetailsState extends State<PackageDetails> {
                       ),
                     ),
                     SizedBox(height: 20),
-                    Obx(
-                      () => Row(
+                    GlassWidget(
+                      child: Column(
                         children: [
-                          Expanded(
-                            child: Text(
-                              controller.selectedContentId.value != null
-                                  ? "Update Content"
-                                  : "Insert Content",
+                          Obx(
+                            () => Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    controller.selectedContentId.value != null
+                                        ? "Update Content"
+                                        : "Insert Content",
+                                  ),
+                                ),
+                                SizedBox(width: 8),
+                                controller.selectedContentId.value != null
+                                    ? IconButton(
+                                        onPressed: () {
+                                          controller.contentController.clear();
+                                          controller.isContentActive(true);
+                                          controller.selectedContentId(null);
+                                        },
+                                        icon: Icon(Icons.close),
+                                      )
+                                    : const SizedBox(),
+                              ],
                             ),
                           ),
-                          SizedBox(width: 8),
-                          controller.selectedContentId.value != null
-                              ? IconButton(
-                                  onPressed: () {
-                                    controller.contentController.clear();
-                                    controller.isContentActive(true);
-                                    controller.selectedContentId(null);
+                          SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: CustomTextField(
+                                  controller: controller.contentController,
+                                  hintText: "Content name",
+                                  borderRadius: 8,
+                                  borderColor: Theme.of(
+                                    context,
+                                  ).colorScheme.outline,
+                                ),
+                              ),
+                              SizedBox(width: 8),
+                              Obx(
+                                () => Switch(
+                                  value: controller.isContentActive.value,
+                                  onChanged: (value) {
+                                    controller.isContentActive.value = value;
                                   },
-                                  icon: Icon(Icons.close),
-                                )
-                              : const SizedBox(),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: CustomTextField(
-                            controller: controller.contentController,
-                            hintText: "Content name",
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 10),
+                          CustomTextField(
+                            controller: controller.limitController,
+                            hintText: "Limit",
                             borderRadius: 8,
                             borderColor: Theme.of(context).colorScheme.outline,
+                            inputType: TextInputType.number,
+                            inputFormatter: [
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
                           ),
-                        ),
-                        SizedBox(width: 8),
-                        Obx(
-                          () => Switch(
-                            value: controller.isContentActive.value,
-                            onChanged: (value) {
-                              controller.isContentActive.value = value;
-                            },
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                     SizedBox(height: 10),
                     Obx(
@@ -167,6 +187,7 @@ class _PackageDetailsState extends State<PackageDetails> {
                             itemBuilder: (context, index) {
                               var content = controller.contentList[index];
                               return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
                                     children: [
@@ -230,7 +251,32 @@ class _PackageDetailsState extends State<PackageDetails> {
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: 4),
+
+                                  content.limit != null
+                                      ? Padding(
+                                          padding: EdgeInsets.only(
+                                            left: 30,
+                                            bottom: 8,
+                                          ),
+                                          child: RichText(
+                                            text: TextSpan(
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                              children: [
+                                                TextSpan(text: "Limit : "),
+                                                TextSpan(
+                                                  text: "${content.limit}",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: AppColors.primary,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        )
+                                      : const SizedBox(height: 4),
                                   CustomDivider(),
                                   SizedBox(height: 8),
                                 ],

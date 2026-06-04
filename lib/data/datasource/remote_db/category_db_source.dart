@@ -7,6 +7,7 @@ abstract class CategoryDbSource {
   Future<bool> addCategory({
     required String name,
     String? parentId,
+    bool? status,
     required String image,
   });
   Future<bool> updateCategory({
@@ -14,6 +15,7 @@ abstract class CategoryDbSource {
     required String name,
     String? parentId,
     String? image,
+    bool? status,
   });
   Future<bool> deleteCategory({required String id});
   Future<List<CategoryModel>> getCategories();
@@ -27,14 +29,20 @@ class CategoryDbSourceImpl extends CategoryDbSource {
   Future<bool> addCategory({
     required String name,
     String? parentId,
+    bool? status,
     required String image,
   }) async {
     try {
       await dioClients.postWithFile(
         url: ApiUrl.addCategoryUrl(),
         body: parentId == null
-            ? {"name": name}
-            : {"name": name, "category_id": parentId, "is_subcategory": 1},
+            ? {"name": name, "status": status}
+            : {
+                "name": name,
+                "category_id": parentId,
+                "is_subcategory": true,
+                "status": status,
+              },
         isTokenRequired: true,
         filePath: image,
         fileKeyName: "image",
@@ -64,6 +72,7 @@ class CategoryDbSourceImpl extends CategoryDbSource {
     required String name,
     String? parentId,
     String? image,
+    bool? status,
   }) async {
     try {
       if (image != null) {

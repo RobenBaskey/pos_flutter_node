@@ -17,12 +17,14 @@ abstract class PackageRepo {
     required String packageId,
     required String name,
     required bool isActive,
+    int? limit,
   });
   Future<bool> updateContent({
     required String packageId,
     required String contentId,
     required String name,
     required bool isActive,
+    int? limit,
   });
   Future<bool> deleteContent({
     required String packageId,

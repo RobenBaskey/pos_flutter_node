@@ -29,6 +29,7 @@ class PackageController extends GetxController {
   var singlePackage = Rxn<PackageEntity>();
   var contentList = <ContentEntity>[].obs;
   final TextEditingController contentController = TextEditingController();
+  final TextEditingController limitController = TextEditingController();
   var isContentActive = false.obs;
   var selectedContentId = Rxn<String>();
 
@@ -150,6 +151,7 @@ class PackageController extends GetxController {
   Future deletePackage(String id) async {
     try {
       await _repo.deletePackage(id: id);
+      Get.back();
       Utils.showSnackBar("Package deleted successfully", title: "Success");
       getPackages();
     } on Exception catch (e) {
@@ -203,9 +205,13 @@ class PackageController extends GetxController {
         packageId: packageId,
         name: contentController.text,
         isActive: isContentActive.value,
+        limit: limitController.text.isNotEmpty
+            ? int.tryParse(limitController.text)
+            : null,
       );
       if (result) {
         contentController.clear();
+        limitController.clear();
         isContentActive(true);
         getSinglePackage(packageId);
       }
@@ -227,10 +233,15 @@ class PackageController extends GetxController {
         contentId: contentId,
         name: contentController.text,
         isActive: isContentActive.value,
+        limit: limitController.text.isNotEmpty
+            ? int.tryParse(limitController.text)
+            : null,
       );
       if (result) {
         contentController.clear();
+        limitController.clear();
         isContentActive(true);
+        selectedContentId.value = null;
         getSinglePackage(packageId);
       }
     } on Exception catch (e) {
@@ -238,5 +249,12 @@ class PackageController extends GetxController {
     } finally {
       isContentLoading(false);
     }
+  }
+
+  @override
+  void onClose() {
+    contentController.dispose();
+    limitController.dispose();
+    super.onClose();
   }
 }

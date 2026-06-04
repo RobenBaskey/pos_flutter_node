@@ -24,7 +24,7 @@ class ProviderController extends GetxController {
   Future<void> getProvider() async {
     try {
       isProviderLoading.value = true;
-      var response = await _providerRepo.getUsers(type: "1");
+      var response = await _providerRepo.getUsers(type: "provider");
       providerList.value = response.users ?? [];
     } catch (e) {
       debugPrint(e.toString());
@@ -37,7 +37,7 @@ class ProviderController extends GetxController {
   Future<void> getCustomers() async {
     try {
       isCustomerLoading.value = true;
-      var response = await _providerRepo.getUsers(type: "2");
+      var response = await _providerRepo.getUsers(type: "customer");
       customerList.value = response.users ?? [];
     } catch (e) {
       debugPrint(e.toString());

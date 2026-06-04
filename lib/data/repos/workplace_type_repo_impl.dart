@@ -2,14 +2,13 @@ import 'package:pos/data/datasource/remote_db/workplace_type_source.dart';
 import 'package:pos/domain/repos/workplace_type_repo.dart';
 
 import '../../domain/entities/job_type_entity.dart';
-import '../datasource/remote_db/job_type_source.dart';
 
 class WorkplaceTypeRepoImpl extends WorkplaceTypeRepo {
   final WorkplaceTypeSource _source;
   WorkplaceTypeRepoImpl(this._source);
   @override
-  Future<bool> addWorkplaceType({required String title, required String description}) {
-    return _source.addWorkplaceType(title: title, description: description);
+  Future<bool> addWorkplaceType({required String title, required String description, bool? isActive}) {
+    return _source.addWorkplaceType(title: title, description: description, isActive: isActive);
   }
 
   @override
@@ -21,7 +20,7 @@ class WorkplaceTypeRepoImpl extends WorkplaceTypeRepo {
   Future<bool> updateWorkplaceType({
     required String id,
     required String title,
-    String isActive = "1",
+    bool? isActive
   }) {
     return _source.updateWorkplaceType(id: id, title: title, isActive: isActive);
   }

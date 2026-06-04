@@ -18,7 +18,13 @@ class MainShell extends GetView<MainShellController> {
       body: IntrinsicHeight(
         child: Row(
           children: [
-            SizedBox(width: 300, height: AppSizes.height, child: SideBar()),
+            Obx(
+              () => SizedBox(
+                width: controller.isMinimized.value ? 100 : 280,
+                height: AppSizes.height,
+                child: SideBar(),
+              ),
+            ),
             VerticalDivider(
               color: Theme.of(context).colorScheme.outline,
               width: 1,

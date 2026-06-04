@@ -11,9 +11,11 @@ class WorkplaceTypeController extends GetxController {
   WorkplaceTypeController(this._repo);
 
   var isWorkplaceTypeLoading = false.obs;
-  var workplaceList = <JobTypeEntity>[].obs;
+  var workplaceList = <JobTypeEntity>[];
+  var searchWorkplaceList = <JobTypeEntity>[].obs;
 
   final TextEditingController workplaceNameController = TextEditingController();
+  var isActive = false.obs;
   var isAdding = false.obs;
 
   //edit job type
@@ -32,7 +34,8 @@ class WorkplaceTypeController extends GetxController {
     try {
       if (isLoadingActive) isWorkplaceTypeLoading(true);
       var result = await _repo.getWorkplaceTypes();
-      workplaceList.value = result;
+      workplaceList = result;
+      searchWorkplaceList.value = result;
     } on Exception catch (e) {
       debugPrint("Error to get workplace type. Exception ${e.toString()}");
     } finally {
@@ -51,6 +54,7 @@ class WorkplaceTypeController extends GetxController {
       await _repo.addWorkplaceType(
         title: workplaceNameController.text,
         description: "",
+        isActive: isActive.value,
       );
       workplaceNameController.clear();
       getWorkplaceTypes(isLoadingActive: false);
@@ -63,6 +67,12 @@ class WorkplaceTypeController extends GetxController {
     } finally {
       isAdding(false);
     }
+  }
+
+  void initUpdate(JobTypeEntity item) {
+    workplaceNameController.text = item.title ?? "";
+    isActive.value = item.status == true;
+    selectedWorkplaceType.value = item;
   }
 
   Future updateJobType() async {
@@ -81,8 +91,10 @@ class WorkplaceTypeController extends GetxController {
       await _repo.updateWorkplaceType(
         id: selectedWorkplaceType.value?.id ?? "",
         title: workplaceNameController.text,
+        isActive: isActive.value,
       );
       workplaceNameController.clear();
+      selectedWorkplaceType.value = null;
       getWorkplaceTypes(isLoadingActive: false);
       Utils.showSnackBar(
         "Workplace type added successfully.",
@@ -105,6 +117,19 @@ class WorkplaceTypeController extends GetxController {
       debugPrint("Error to delete. Exception ${e.toString()}");
     } finally {
       isDeleting(false);
+    }
+  }
+
+  void onSearch(String value) {
+    if (value.isEmpty) {
+      searchWorkplaceList.value = workplaceList;
+    } else {
+      searchWorkplaceList.value = workplaceList
+          .where(
+            (e) =>
+                e.title?.toLowerCase().contains(value.toLowerCase()) ?? false,
+          )
+          .toList();
     }
   }
 }

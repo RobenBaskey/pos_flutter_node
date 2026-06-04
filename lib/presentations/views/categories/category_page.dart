@@ -8,6 +8,7 @@ import 'package:pos/presentations/views/categories/components/add_category.dart'
 import 'package:pos/presentations/views/categories/components/update_category.dart';
 import 'package:pos/presentations/widgets/custom_image.dart';
 
+import '../../../core/constants/enum.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_container_shape.dart';
@@ -53,6 +54,9 @@ class CategoryPage extends GetView<CategoryController> {
                     SizedBox(
                       width: 260,
                       child: CustomTextField(
+                        onChanged: (value) {
+                          controller.onSearch(value);
+                        },
                         hintText: "Search",
                         borderRadius: 8,
                         borderColor: Theme.of(context).colorScheme.outline,
@@ -107,6 +111,7 @@ class CategoryPage extends GetView<CategoryController> {
                               child: Row(
                                 children: [
                                   Expanded(
+                                    flex: 2,
                                     child: Text(
                                       "CATEGORY NAME",
                                       style: TextStyle(
@@ -116,12 +121,26 @@ class CategoryPage extends GetView<CategoryController> {
                                       ),
                                     ),
                                   ),
-                                  Text(
-                                    "ACTION",
-                                    style: TextStyle(
-                                      color: AppColors.greyTextColor,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600,
+                                  Expanded(
+                                    child: Text(
+                                      "STATUS",
+                                      style: TextStyle(
+                                        color: AppColors.greyTextColor,
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 200,
+                                    child: Text(
+                                      "ACTION",
+                                      textAlign: TextAlign.end,
+                                      style: TextStyle(
+                                        color: AppColors.greyTextColor,
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -130,9 +149,10 @@ class CategoryPage extends GetView<CategoryController> {
                             CustomDivider(),
                             Expanded(
                               child: ListView.builder(
-                                itemCount: controller.categoryList.length,
+                                itemCount: controller.searchCategoryList.length,
                                 itemBuilder: (context, index) {
-                                  var catItem = controller.categoryList[index];
+                                  var catItem =
+                                      controller.searchCategoryList[index];
                                   return Column(
                                     children: [
                                       Padding(
@@ -150,92 +170,153 @@ class CategoryPage extends GetView<CategoryController> {
                                           children: [
                                             Row(
                                               children: [
-                                                CustomImage(
-                                                  path:
-                                                      "${ApiUrl.getImageBaseUrl()}${catItem.image}",
-                                                  height: 24,
-                                                  width: 24,
+                                                Expanded(
+                                                  flex: 2,
+                                                  child: Row(
+                                                    children: [
+                                                      InkWell(
+                                                        onTap: () {
+                                                          if (catItem.image !=
+                                                              null) {
+                                                            Utils.showImageViewer(
+                                                              context,
+                                                              selectedImage:
+                                                                  catItem
+                                                                      .image!,
+                                                              isFile: false,
+                                                            );
+                                                          }
+                                                        },
+                                                        child: CustomImage(
+                                                          path:
+                                                              "${ApiUrl.getImageBaseUrl()}${catItem.image}",
+                                                          height: 24,
+                                                          width: 24,
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: 10),
+                                                      Expanded(
+                                                        child: Text(
+                                                          catItem.name ?? "",
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                                 SizedBox(width: 10),
                                                 Expanded(
                                                   child: Text(
-                                                    catItem.name ?? "",
+                                                    catItem.status == true
+                                                        ? "Active"
+                                                        : "In-active",
+                                                    style: TextStyle(
+                                                      color:
+                                                          catItem.status == true
+                                                          ? AppColors.primary
+                                                          : AppColors
+                                                                .greyTextColor,
+                                                    ),
                                                   ),
                                                 ),
-                                                Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: [
-                                                    IconButton(
-                                                      onPressed: () {
-                                                        Utils.showCustomDialog(
-                                                          context: context,
-                                                          alignment:
-                                                              Alignment.center,
-                                                          bearerColor:
-                                                              Theme.of(context)
-                                                                  .colorScheme
-                                                                  .outline
-                                                                  .withValues(
-                                                                    alpha: 0.4,
-                                                                  ),
-                                                          child: AddCategory(
-                                                            category: catItem,
-                                                          ),
-                                                        );
-                                                      },
-                                                      icon: Icon(
-                                                        FontAwesomeIcons.plus,
-                                                        size: 16,
-                                                        color:
-                                                            AppColors.primary,
+                                                SizedBox(
+                                                  width: 200,
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                    children: [
+                                                      IconButton(
+                                                        onPressed: () {
+                                                          Utils.showCustomDialog(
+                                                            context: context,
+                                                            alignment: Alignment
+                                                                .center,
+                                                            bearerColor:
+                                                                Theme.of(
+                                                                      context,
+                                                                    )
+                                                                    .colorScheme
+                                                                    .outline
+                                                                    .withValues(
+                                                                      alpha:
+                                                                          0.4,
+                                                                    ),
+                                                            child: AddCategory(
+                                                              category: catItem,
+                                                            ),
+                                                          );
+                                                        },
+                                                        icon: Icon(
+                                                          FontAwesomeIcons.plus,
+                                                          size: 16,
+                                                          color:
+                                                              AppColors.primary,
+                                                        ),
                                                       ),
-                                                    ),
-                                                    IconButton(
-                                                      onPressed: () {
-                                                        controller
-                                                                .updateNameController
-                                                                .text =
-                                                            catItem.name ?? "";
-                                                        Utils.showCustomDialog(
-                                                          context: context,
-                                                          alignment:
-                                                              Alignment.center,
-                                                          bearerColor:
-                                                              Theme.of(context)
-                                                                  .colorScheme
-                                                                  .outline
-                                                                  .withValues(
-                                                                    alpha: 0.4,
-                                                                  ),
-                                                          child: UpdateCategory(
-                                                            category: catItem,
-                                                          ),
-                                                        );
-                                                      },
-                                                      icon: Icon(
-                                                        FontAwesomeIcons
-                                                            .penToSquare,
-                                                        size: 16,
-                                                        color:
-                                                            AppColors.secondary,
+                                                      IconButton(
+                                                        onPressed: () {
+                                                          controller.initUpdate(
+                                                            catItem,
+                                                          );
+                                                          Utils.showCustomDialog(
+                                                            context: context,
+                                                            alignment: Alignment
+                                                                .center,
+                                                            bearerColor:
+                                                                Theme.of(
+                                                                      context,
+                                                                    )
+                                                                    .colorScheme
+                                                                    .outline
+                                                                    .withValues(
+                                                                      alpha:
+                                                                          0.4,
+                                                                    ),
+                                                            child:
+                                                                UpdateCategory(
+                                                                  category:
+                                                                      catItem,
+                                                                ),
+                                                          );
+                                                        },
+                                                        icon: Icon(
+                                                          FontAwesomeIcons
+                                                              .penToSquare,
+                                                          size: 16,
+                                                          color: AppColors
+                                                              .secondary,
+                                                        ),
                                                       ),
-                                                    ),
-                                                    IconButton(
-                                                      onPressed: () {
-                                                        showDeleteDialog(
-                                                          context,
-                                                          catItem.id ?? "",
-                                                        );
-                                                      },
-                                                      icon: Icon(
-                                                        Icons.delete,
-                                                        size: 18,
-                                                        color: AppColors
-                                                            .warningColor,
+                                                      IconButton(
+                                                        onPressed: () {
+                                                          if (catItem.children !=
+                                                                  null &&
+                                                              catItem
+                                                                  .children!
+                                                                  .isNotEmpty) {
+                                                            Utils.showSnackBar(
+                                                              "Please delete sub-categories first!",
+                                                              isSuccess: false,
+                                                              type: SnackBarType
+                                                                  .error,
+                                                            );
+                                                            return;
+                                                          }
+                                                          showDeleteDialog(
+                                                            context,
+                                                            catItem.id ?? "",
+                                                          );
+                                                        },
+                                                        icon: Icon(
+                                                          Icons.delete,
+                                                          size: 18,
+                                                          color: AppColors
+                                                              .warningColor,
+                                                        ),
                                                       ),
-                                                    ),
-                                                  ],
+                                                    ],
+                                                  ),
                                                 ),
                                               ],
                                             ),
@@ -268,66 +349,96 @@ class CategoryPage extends GetView<CategoryController> {
                                                                   ),
                                                               child: Row(
                                                                 children: [
-                                                                  Icon(
-                                                                    Icons
-                                                                        .remove,
-                                                                  ),
-                                                                  SizedBox(
-                                                                    width: 6,
-                                                                  ),
-                                                                  CustomImage(
-                                                                    path:
-                                                                        "${ApiUrl.getImageBaseUrl()}${childItem.image}",
-                                                                    height: 24,
-                                                                    width: 24,
-                                                                  ),
-                                                                  SizedBox(
-                                                                    width: 10,
-                                                                  ),
                                                                   Expanded(
-                                                                    child: Text(
-                                                                      childItem
-                                                                              .name ??
-                                                                          "",
+                                                                    flex: 2,
+                                                                    child: Row(
+                                                                      children: [
+                                                                        Icon(
+                                                                          Icons
+                                                                              .remove,
+                                                                        ),
+                                                                        SizedBox(
+                                                                          width:
+                                                                              6,
+                                                                        ),
+                                                                        CustomImage(
+                                                                          path:
+                                                                              "${ApiUrl.getImageBaseUrl()}${childItem.image}",
+                                                                          height:
+                                                                              24,
+                                                                          width:
+                                                                              24,
+                                                                        ),
+                                                                        SizedBox(
+                                                                          width:
+                                                                              10,
+                                                                        ),
+                                                                        Expanded(
+                                                                          child: Text(
+                                                                            childItem.name ??
+                                                                                "",
+                                                                          ),
+                                                                        ),
+                                                                      ],
                                                                     ),
                                                                   ),
-                                                                  Row(
-                                                                    mainAxisSize:
-                                                                        MainAxisSize
-                                                                            .min,
-                                                                    children: [
-                                                                      IconButton(
-                                                                        onPressed:
-                                                                            () {},
-                                                                        icon: Icon(
-                                                                          FontAwesomeIcons
-                                                                              .penToSquare,
-                                                                          size:
-                                                                              16,
-                                                                          color:
-                                                                              AppColors.secondary,
-                                                                        ),
+
+                                                                  Expanded(
+                                                                    child: Text(
+                                                                      childItem.status ==
+                                                                              true
+                                                                          ? "Active"
+                                                                          : "In-active",
+                                                                      style: TextStyle(
+                                                                        color:
+                                                                            catItem.status ==
+                                                                                true
+                                                                            ? AppColors.primary
+                                                                            : AppColors.greyTextColor,
                                                                       ),
-                                                                      IconButton(
-                                                                        onPressed: () {
-                                                                          showDeleteDialog(
-                                                                            context,
-                                                                            childItem.id ??
-                                                                                "",
-                                                                            isSubCategory:
-                                                                                true,
-                                                                          );
-                                                                        },
-                                                                        icon: Icon(
-                                                                          Icons
-                                                                              .delete,
-                                                                          size:
-                                                                              18,
-                                                                          color:
-                                                                              AppColors.warningColor,
+                                                                    ),
+                                                                  ),
+
+                                                                  SizedBox(
+                                                                    width: 210,
+                                                                    child: Row(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .end,
+                                                                      mainAxisSize:
+                                                                          MainAxisSize
+                                                                              .min,
+                                                                      children: [
+                                                                        IconButton(
+                                                                          onPressed:
+                                                                              () {},
+                                                                          icon: Icon(
+                                                                            FontAwesomeIcons.penToSquare,
+                                                                            size:
+                                                                                16,
+                                                                            color:
+                                                                                AppColors.secondary,
+                                                                          ),
                                                                         ),
-                                                                      ),
-                                                                    ],
+                                                                        IconButton(
+                                                                          onPressed: () {
+                                                                            showDeleteDialog(
+                                                                              context,
+                                                                              childItem.id ??
+                                                                                  "",
+                                                                              isSubCategory: true,
+                                                                            );
+                                                                          },
+                                                                          icon: Icon(
+                                                                            Icons.delete,
+                                                                            size:
+                                                                                18,
+                                                                            color:
+                                                                                AppColors.warningColor,
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
                                                                   ),
                                                                 ],
                                                               ),

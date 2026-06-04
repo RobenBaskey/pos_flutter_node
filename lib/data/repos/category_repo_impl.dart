@@ -11,11 +11,13 @@ class CategoryRepoImpl implements CategoryRepo {
     required String name,
     String? parentId,
     required String image,
+    bool? status,
   }) {
     return categoryDbSource.addCategory(
       name: name,
       parentId: parentId,
       image: image,
+      status: status,
     );
   }
 
@@ -35,7 +37,13 @@ class CategoryRepoImpl implements CategoryRepo {
     required String name,
     String? parentId,
     String? image,
+    bool? status,
   }) {
-    return categoryDbSource.updateCategory(id: id, name: name, image: image);
+    return categoryDbSource.updateCategory(
+      id: id,
+      name: name,
+      image: image,
+      status: status,
+    );
   }
 }

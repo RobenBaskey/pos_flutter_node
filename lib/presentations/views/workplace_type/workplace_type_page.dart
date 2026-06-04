@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:pos/core/utils/utils.dart';
 import 'package:pos/presentations/controller/workplace_type_controller.dart';
 import 'package:pos/presentations/widgets/custom_button.dart';
+import 'package:pos/presentations/widgets/refresh_button_widget.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../widgets/custom_container_shape.dart';
@@ -40,9 +41,18 @@ class WorkplaceTypePage extends GetView<WorkplaceTypeController> {
                       ),
                     ),
                     SizedBox(width: 10),
+                    RefreshButtonWidget(
+                      onRefresh: () {
+                        controller.getWorkplaceTypes();
+                      },
+                    ),
+                    SizedBox(width: 10),
                     SizedBox(
                       width: 260,
                       child: CustomTextField(
+                        onChanged: (value) {
+                          controller.onSearch(value);
+                        },
                         hintText: "Search Workplace type",
                         borderRadius: 8,
                         borderColor: Theme.of(context).colorScheme.outline,
@@ -74,6 +84,21 @@ class WorkplaceTypePage extends GetView<WorkplaceTypeController> {
                               borderColor: Theme.of(
                                 context,
                               ).colorScheme.outline,
+                            ),
+                            SizedBox(height: 30),
+                            Row(
+                              children: [
+                                Expanded(child: Text("Active Status")),
+                                SizedBox(width: 4),
+                                Obx(
+                                  () => Switch(
+                                    value: controller.isActive.value,
+                                    onChanged: (v) {
+                                      controller.isActive(v);
+                                    },
+                                  ),
+                                ),
+                              ],
                             ),
                             SizedBox(height: 30),
                             Row(
@@ -143,18 +168,37 @@ class WorkplaceTypePage extends GetView<WorkplaceTypeController> {
                                     size: ColumnSize.M,
                                   ),
                                   DataColumn2(
+                                    label: Center(child: Text("STATUS")),
+                                    size: ColumnSize.S,
+                                  ),
+                                  DataColumn2(
                                     label: Center(child: Text("ACTION")),
                                     fixedWidth: 200,
                                   ),
                                 ],
                                 rows: List<DataRow>.generate(
-                                  controller.workplaceList.length,
+                                  controller.searchWorkplaceList.length,
                                   (index) {
-                                    var item = controller.workplaceList[index];
+                                    var item =
+                                        controller.searchWorkplaceList[index];
                                     return DataRow(
                                       cells: [
                                         DataCell(
                                           Center(child: Text(item.title ?? "")),
+                                        ),
+                                        DataCell(
+                                          Center(
+                                            child: Text(
+                                              item.status == true
+                                                  ? "Active"
+                                                  : "In-active",
+                                              style: TextStyle(
+                                                color: item.status == true
+                                                    ? AppColors.primary
+                                                    : AppColors.greyTextColor,
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                         DataCell(
                                           Row(
@@ -163,14 +207,7 @@ class WorkplaceTypePage extends GetView<WorkplaceTypeController> {
                                             children: [
                                               IconButton(
                                                 onPressed: () {
-                                                  controller
-                                                          .workplaceNameController
-                                                          .text =
-                                                      item.title ?? "";
-                                                  controller
-                                                          .selectedWorkplaceType
-                                                          .value =
-                                                      item;
+                                                  controller.initUpdate(item);
                                                 },
                                                 icon: Icon(
                                                   FontAwesomeIcons.penToSquare,

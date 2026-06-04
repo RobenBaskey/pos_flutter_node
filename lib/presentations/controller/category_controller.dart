@@ -10,7 +10,8 @@ class CategoryController extends GetxController {
   CategoryController(this._categoryRepo);
 
   var isCategoryLoading = false.obs;
-  var categoryList = <CategoryEntity>[].obs;
+  var categoryList = <CategoryEntity>[];
+  var searchCategoryList = <CategoryEntity>[].obs;
 
   ///add category
   var isCategoryAdding = false.obs;
@@ -18,11 +19,13 @@ class CategoryController extends GetxController {
   final TextEditingController categoryDescriptionController =
       TextEditingController();
   var selectedImagePath = Rxn<String>();
+  var isStatusActive = true.obs;
 
   ///delete category
   var isCategoryDeleting = false.obs;
 
   ///update category
+  var selectedCategoryEntity = Rxn<CategoryEntity>();
   final TextEditingController updateNameController = TextEditingController();
   final TextEditingController updateDescriptionController =
       TextEditingController();
@@ -37,7 +40,8 @@ class CategoryController extends GetxController {
     try {
       if (isLoading) isCategoryLoading.value = true;
       var result = await _categoryRepo.getCategories();
-      categoryList.value = result;
+      categoryList = result;
+      searchCategoryList.value = result;
     } catch (e) {
       debugPrint("Error fetching categories: $e");
     } finally {
@@ -69,6 +73,7 @@ class CategoryController extends GetxController {
         name: categoryNameController.text.trim(),
         image: selectedImagePath.value!,
         parentId: category?.id,
+        status: isStatusActive.value,
       );
       if (result) {
         categoryNameController.clear();
@@ -100,9 +105,20 @@ class CategoryController extends GetxController {
       }
     } on Exception catch (e) {
       debugPrint(e.toString());
+      Utils.showSnackBar(
+        "Error to delete category!",
+        isSuccess: false,
+        type: SnackBarType.error,
+      );
     } finally {
       isCategoryDeleting.value = false;
     }
+  }
+
+  void initUpdate(CategoryEntity item) {
+    selectedCategoryEntity.value = item;
+    updateNameController.text = item.name ?? "";
+    isStatusActive.value = item.status ?? false;
   }
 
   Future updateCategory({CategoryEntity? category}) async {
@@ -117,6 +133,7 @@ class CategoryController extends GetxController {
         id: category?.id ?? "",
         name: updateNameController.text.trim(),
         image: selectedImagePath.value,
+        status: isStatusActive.value,
       );
       if (result) {
         updateNameController.clear();
@@ -130,6 +147,18 @@ class CategoryController extends GetxController {
       debugPrint("Error adding category: $e");
     } finally {
       isCategoryAdding.value = false;
+    }
+  }
+
+  void onSearch(String value) {
+    if (value.isEmpty) {
+      searchCategoryList.value = categoryList;
+    } else {
+      searchCategoryList.value = categoryList
+          .where(
+            (e) => e.name?.toLowerCase().contains(value.toLowerCase()) ?? false,
+          )
+          .toList();
     }
   }
 }

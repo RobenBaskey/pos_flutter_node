@@ -4,6 +4,7 @@ import 'package:pos/core/constants/enum.dart';
 import 'package:pos/core/utils/utils.dart';
 import 'package:pos/domain/repos/auth_repo.dart';
 import 'package:pos/domain/repos/user_repo.dart';
+import 'package:pos/presentations/controller/user_controller.dart';
 
 import '../routes/app_routes.dart';
 
@@ -13,10 +14,10 @@ class LoginController extends GetxController {
   LoginController(this._userRepo, this._authRepo);
 
   final TextEditingController phoneController = TextEditingController(
-    text: "01717601905",
+    text: "01700000000",
   );
   final TextEditingController passwordController = TextEditingController(
-    text: "james555",
+    text: "admin12345",
   );
 
   var isLoginLoading = false.obs;
@@ -35,7 +36,11 @@ class LoginController extends GetxController {
       );
       isLoginLoading.value = false;
       if (result != null) {
-        await _userRepo.setToken(result);
+        Get.find<UserController>().users.value = result.user;
+        Get.find<UserController>().userType.value = Utils.formatRoleType(
+          result.user?.role ?? "",
+        );
+        await _userRepo.setToken(result.token ?? "");
         Utils.showSnackBar(
           title: "Login Success",
           "You have successfully logged in.",

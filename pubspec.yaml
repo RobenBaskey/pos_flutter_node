@@ -30,13 +30,15 @@ dependencies:
   cached_network_image: ^3.4.1
   shimmer: ^3.0.0
 
+  #ui
+  flutter_quill: ^11.5.0
+  vsc_quill_delta_to_html: ^1.0.5
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^6.0.0
-
-
 
 # The following section is specific to Flutter packages.
 flutter:

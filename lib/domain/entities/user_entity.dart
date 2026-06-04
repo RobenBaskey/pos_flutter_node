@@ -1,11 +1,10 @@
-
 class UserEntity {
   final String? id;
   final bool? verified;
   final String? firstName;
   final String? lastName;
   final String? phone;
-  final dynamic address;
+  final String? address;
   final String? bio;
   final String? image;
   final String? companyName;
@@ -25,5 +24,4 @@ class UserEntity {
     this.averageRating,
     this.ratingCount,
   });
-
 }

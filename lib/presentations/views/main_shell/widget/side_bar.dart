@@ -5,6 +5,9 @@ import 'package:pos/core/theme/app_colors.dart';
 import 'package:pos/presentations/controller/main_shell_controller.dart';
 import 'package:pos/presentations/routes/app_routes.dart';
 import 'package:pos/presentations/widgets/custom_divider.dart';
+import 'package:pos/presentations/widgets/custom_image.dart';
+
+import '../../../../core/constants/app_icons.dart';
 
 class SideBar extends GetView<MainShellController> {
   const SideBar({super.key});
@@ -14,9 +17,35 @@ class SideBar extends GetView<MainShellController> {
     return Column(
       children: [
         SizedBox(height: 14),
-        Text(
-          AppConstants.appName,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+        Obx(
+          () => Row(
+            children: [
+              Expanded(
+                child: controller.isMinimized.value
+                    ? CustomImage(path: AppIcons.logo, height: 40)
+                    : Text(
+                        AppConstants.appName,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 30,
+                        ),
+                      ),
+              ),
+              IconButton(
+                onPressed: () {
+                  controller.isMinimized.value = !controller.isMinimized.value;
+                },
+                icon: CustomImage(
+                  path: controller.isMinimized.value
+                      ? AppIcons.rightChevron
+                      : AppIcons.leftChevron,
+                  height: 20,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
         ),
         // Text(
         //   "Your Point of Sale Solution",
@@ -37,6 +66,7 @@ class SideBar extends GetView<MainShellController> {
                   size: item.size,
                   color: item.color,
                   isDivider: item.isDivider,
+                  isMinimized: controller.isMinimized.value,
                 );
               },
             ),
@@ -53,6 +83,7 @@ class SideBar extends GetView<MainShellController> {
     double size = 20,
     Color? color,
     bool? isDivider,
+    bool isMinimized = false,
   }) {
     return Column(
       children: [
@@ -92,18 +123,20 @@ class SideBar extends GetView<MainShellController> {
                       ),
                       SizedBox(width: 10),
                       Expanded(
-                        child: Text(
-                          title,
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color:
-                                color ??
-                                (controller.selectedIndex.value == index
-                                    ? AppColors.primary
-                                    : AppColors.greyTextColor),
-                          ),
-                        ),
+                        child: isMinimized
+                            ? const SizedBox()
+                            : Text(
+                                title,
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color:
+                                      color ??
+                                      (controller.selectedIndex.value == index
+                                          ? AppColors.primary
+                                          : AppColors.greyTextColor),
+                                ),
+                              ),
                       ),
                     ],
                   ),

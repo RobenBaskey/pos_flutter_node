@@ -4,7 +4,7 @@ class CategoryEntity {
   final String? image;
   final bool? isSubcategory;
   final String? categoryId;
-  final bool? isActive;
+  final bool? status;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final List<CategoryEntity>? children;
@@ -15,9 +15,9 @@ class CategoryEntity {
     this.image,
     this.isSubcategory,
     this.categoryId,
-    this.isActive,
+    this.status,
     this.createdAt,
     this.updatedAt,
-    this.children
+    this.children,
   });
 }

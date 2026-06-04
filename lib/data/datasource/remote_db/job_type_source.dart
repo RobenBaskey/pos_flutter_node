@@ -3,11 +3,11 @@ import '../../../core/network/dio_client.dart';
 import '../../model/job_type_model.dart';
 
 abstract class JobTypeSource {
-  Future<bool> addJobType({required String title});
+  Future<bool> addJobType({required String title, required bool isActive});
   Future<bool> updateJobType({
     required String id,
     required String title,
-    String isActive = "1",
+    bool? isActive,
   });
   Future<bool> deleteJobType({required String id});
   Future<List<JobTypeModel>> getJobTypes();
@@ -18,11 +18,14 @@ class JobTypeSourceImpl extends JobTypeSource {
   JobTypeSourceImpl(this._clients);
 
   @override
-  Future<bool> addJobType({required String title}) async {
+  Future<bool> addJobType({
+    required String title,
+    required bool isActive,
+  }) async {
     try {
       await _clients.post(
         url: ApiUrl.addJobTypeUrl(),
-        body: {"title": title},
+        body: {"title": title, "is_active": isActive},
         isTokenRequired: true,
       );
       return true;
@@ -48,12 +51,12 @@ class JobTypeSourceImpl extends JobTypeSource {
   Future<bool> updateJobType({
     required String id,
     required String title,
-    String isActive = "1",
+    bool? isActive,
   }) async {
     try {
       await _clients.put(
         url: ApiUrl.updateJobTypeUrl(),
-        body: {"type_id": id, "title": title, "is_active": isActive},
+        body: {"id": id, "title": title, "status": isActive},
         isTokenRequired: true,
       );
       return true;

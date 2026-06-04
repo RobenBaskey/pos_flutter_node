@@ -5,6 +5,7 @@ abstract class CategoryRepo {
     required String name,
     String? parentId,
     required String image,
+    bool? status,
   });
 
   Future<bool> updateCategory({
@@ -12,6 +13,7 @@ abstract class CategoryRepo {
     required String name,
     String? parentId,
     String? image,
+    bool? status,
   });
 
   Future<List<CategoryEntity>> getCategories();

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pos/core/network/api_url.dart';
 import 'package:pos/presentations/widgets/custom_image.dart';
 
 class CircleImage extends StatelessWidget {
@@ -7,15 +8,22 @@ class CircleImage extends StatelessWidget {
     required this.path,
     this.height = 40,
     this.width = 40,
+    this.isNetwork = true,
   });
   final String path;
   final double height, width;
+  final bool isNetwork;
 
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(height / 2),
-      child: CustomImage(path: path, height: height, width: width),
+      child: CustomImage(
+        path: isNetwork ? ApiUrl.getImageBaseUrl() + path : path,
+        height: height,
+        width: width,
+        isFile: isNetwork == false,
+      ),
     );
   }
 }

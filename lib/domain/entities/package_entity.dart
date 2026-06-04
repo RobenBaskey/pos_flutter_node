@@ -26,6 +26,7 @@ class ContentEntity {
   final String? id;
   final String? name;
   final bool? isActive;
+  final int? limit;
 
-  ContentEntity({this.id, this.name, this.isActive});
+  ContentEntity({this.id, this.name, this.isActive, this.limit});
 }

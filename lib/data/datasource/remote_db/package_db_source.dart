@@ -19,12 +19,14 @@ abstract class PackageDbSource {
     required String packageId,
     required String name,
     required bool isActive,
+    int? limit,
   });
   Future<bool> updateContent({
     required String packageId,
     required String contentId,
     required String name,
     required bool isActive,
+    int? limit,
   });
   Future<bool> deleteContent({
     required String packageId,
@@ -58,10 +60,16 @@ class PackageDbSourceImpl extends PackageDbSource {
   @override
   Future<List<PackageModel>> getPackages() async {
     try {
-      var response = await _clients.get(url: ApiUrl.getPackageUrl());
-      return List<PackageModel>.from(
-        response["data"]!.map((x) => PackageModel.fromJson(x)),
+      var response = await _clients.get(
+        url: ApiUrl.getPackageUrl(),
+        isTokenRequired: true,
       );
+      if (response["data"] != null) {
+        return List<PackageModel>.from(
+          response["data"]!.map((x) => PackageModel.fromJson(x)),
+        );
+      }
+      return [];
     } catch (e) {
       rethrow;
     }
@@ -70,7 +78,10 @@ class PackageDbSourceImpl extends PackageDbSource {
   @override
   Future<PackageModel?> getSinglePackage(String id) async {
     try {
-      var response = await _clients.get(url: ApiUrl.getSinglePackageUrl(id));
+      var response = await _clients.get(
+        url: ApiUrl.getSinglePackageUrl(id),
+        isTokenRequired: true,
+      );
       return PackageModel.fromJson(response["data"]);
     } catch (e) {
       rethrow;
@@ -80,7 +91,7 @@ class PackageDbSourceImpl extends PackageDbSource {
   @override
   Future<bool> deletePackage({required String id}) async {
     try {
-      await _clients.get(
+      await _clients.delete(
         url: ApiUrl.deletePackageUrl(id),
         isTokenRequired: true,
       );
@@ -148,11 +159,17 @@ class PackageDbSourceImpl extends PackageDbSource {
     required String packageId,
     required String name,
     required bool isActive,
+    int? limit,
   }) async {
     try {
       await _clients.post(
         url: ApiUrl.insertPackageContentUrl(),
-        body: {"package_id": packageId, "name": name, "is_active": isActive},
+        body: {
+          "package_id": packageId,
+          "name": name,
+          "is_active": isActive,
+          "limit": limit,
+        },
         isTokenRequired: true,
       );
       return true;
@@ -167,6 +184,7 @@ class PackageDbSourceImpl extends PackageDbSource {
     required String contentId,
     required String name,
     required bool isActive,
+    int? limit,
   }) async {
     try {
       await _clients.put(
@@ -176,6 +194,7 @@ class PackageDbSourceImpl extends PackageDbSource {
           "id": contentId,
           "name": name,
           "is_active": isActive,
+          "limit": limit,
         },
         isTokenRequired: true,
       );

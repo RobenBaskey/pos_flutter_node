@@ -23,7 +23,6 @@ class PackageRepoImpl extends PackageRepo {
     return _source.getSinglePackage(id);
   }
 
-
   @override
   Future<bool> insertPackage({
     required PackageEntity model,
@@ -50,11 +49,13 @@ class PackageRepoImpl extends PackageRepo {
     required String packageId,
     required String name,
     required bool isActive,
+    int? limit,
   }) {
     return _source.insertContent(
       packageId: packageId,
       name: name,
       isActive: isActive,
+      limit: limit
     );
   }
 
@@ -64,12 +65,14 @@ class PackageRepoImpl extends PackageRepo {
     required String contentId,
     required String name,
     required bool isActive,
+    int? limit,
   }) {
     return _source.updateContent(
       packageId: packageId,
       contentId: contentId,
       name: name,
       isActive: isActive,
+      limit: limit
     );
   }
 

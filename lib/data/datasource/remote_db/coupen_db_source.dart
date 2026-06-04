@@ -68,9 +68,12 @@ class CouponDbSourceImpl extends CouponDbSource {
         url: ApiUrl.getCouponUrl(),
         isTokenRequired: true,
       );
-      return List<CouponModel>.from(
-        response["data"]!.map((x) => CouponModel.fromJson(x)),
-      );
+      if (response["data"] != null) {
+        return List<CouponModel>.from(
+          response["data"]!.map((x) => CouponModel.fromJson(x)),
+        );
+      }
+      return [];
     } catch (e) {
       throw Exception("Failed to load coupons: ${e.toString()}");
     }
