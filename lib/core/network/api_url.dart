@@ -2,7 +2,8 @@ class ApiUrl {
   static const String _rootUrl = "https://api.jonosokti.com/api/";
   //static const String _rootUrl = "http://localhost:8080/api/";
   static const String _baseUrl = "${_rootUrl}v1";
-  static String getImageBaseUrl() => "http://localhost:8080";
+  //static String getImageBaseUrl() => "http://localhost:8080";
+  static String getImageBaseUrl() => "https://api.jonosokti.com";
 
   ///auth urls
   static String loginUrl() => "$_baseUrl/admin/login";
