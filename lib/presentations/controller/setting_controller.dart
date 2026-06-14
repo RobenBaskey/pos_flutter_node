@@ -108,12 +108,12 @@ class SettingController extends GetxController {
 
   Future pickLogo() async {
     final image = await Utils.pickImage();
-    if (image != null) logo.value = image.path;
+    if (image != null) logo.value = image.path!;
   }
 
   Future pickBanner() async {
     final image = await Utils.pickImage();
-    if (image != null) banner.value = image.path;
+    if (image != null) banner.value = image.path!;
   }
 
   void removeLogo() {

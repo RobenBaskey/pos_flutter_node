@@ -183,7 +183,7 @@ class CouponPage extends GetView<CouponController> {
                                       children: [
                                         IconButton(
                                           onPressed: () {},
-                                          icon: Icon(
+                                          icon: FaIcon(
                                             FontAwesomeIcons.eye,
                                             size: 16,
                                             color: AppColors.primary,
@@ -203,7 +203,7 @@ class CouponPage extends GetView<CouponController> {
                                               child: AddCoupon(coupon: coupon),
                                             );
                                           },
-                                          icon: Icon(
+                                          icon: FaIcon(
                                             FontAwesomeIcons.penToSquare,
                                             size: 16,
                                             color: AppColors.secondary,

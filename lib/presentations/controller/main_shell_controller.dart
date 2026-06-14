@@ -27,14 +27,14 @@ class MainShellController extends GetxController {
 
   var shellItemList = <ShellModel>[
     ShellModel(
-      icon: Icons.dashboard_outlined,
+      icon: FontAwesomeIcons.tableCellsLarge,
       name: "Dashboard",
       page: DashboardPage(),
     ),
     //ShellModel(icon: Icons.monitor, name: "POS Terminals", page: PosTerminal()),
-    ShellModel(icon: Icons.badge, name: "Jobs", page: JobsPage()),
+    ShellModel(icon: FontAwesomeIcons.idCard, name: "Jobs", page: JobsPage()),
     ShellModel(
-      icon: Icons.select_all_rounded,
+      icon: FontAwesomeIcons.calendarCheck,
       name: "Bookings",
       page: BookingsPage(),
       isDivider: true,
@@ -46,22 +46,22 @@ class MainShellController extends GetxController {
       page: JobTypePage(),
     ),
     ShellModel(
-      icon: Icons.work_outline,
+      icon: FontAwesomeIcons.folderOpen,
       name: "Workplace Type",
       page: WorkplaceTypePage(),
     ),
     ShellModel(
-      icon: Icons.folder_open_rounded,
+      icon: FontAwesomeIcons.folderOpen,
       name: "Categories",
       page: CategoryPage(),
     ),
     ShellModel(
-      icon: Icons.price_change_outlined,
+      icon: FontAwesomeIcons.crown,
       name: "Package",
       page: PackagePage(),
     ),
     ShellModel(
-      icon: Icons.local_offer_outlined,
+      icon: FontAwesomeIcons.tag,
       name: "Coupen",
       page: CouponPage(),
       isDivider: true,
@@ -80,14 +80,14 @@ class MainShellController extends GetxController {
       page: CustomerPage(),
     ),
     ShellModel(
-      icon: Icons.perm_identity,
-      name: "Identity",
+      icon: FontAwesomeIcons.user,
+      name: "Identities",
       page: IdentityPage(),
       isDivider: true,
     ),
 
     ShellModel(
-      icon: Icons.payment_rounded,
+      icon: FontAwesomeIcons.creditCard,
       name: "Payment Methods",
       page: PaymentMethods(),
       isDivider: true,
@@ -106,20 +106,24 @@ class MainShellController extends GetxController {
       isDivider: true,
     ),
     ShellModel(
-      icon: Icons.shield_outlined,
+      icon: FontAwesomeIcons.userShield,
       name: "Roles",
       page: RolePage(),
       isDivider: true,
     ),
 
-    ShellModel(icon: Icons.settings, name: "Settings", page: SettingsPage()),
     ShellModel(
-      icon: Icons.person_2_outlined,
+      icon: FontAwesomeIcons.gear,
+      name: "Settings",
+      page: SettingsPage(),
+    ),
+    ShellModel(
+      icon: FontAwesomeIcons.user,
       name: "Profile",
       page: ProfilePage(),
     ),
     ShellModel(
-      icon: Icons.logout,
+      icon: FontAwesomeIcons.rightFromBracket,
       color: Colors.red,
       name: "Logout",
       page: SizedBox(),

@@ -1,5 +1,5 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 import 'package:pos/core/utils/utils.dart';
 import 'package:pos/presentations/widgets/image_viewer.dart';
 
@@ -9,12 +9,12 @@ class CustomSelectImageWidget extends StatelessWidget {
     required this.onTap,
     required this.onRemove,
     this.selectedImage,
-    this.isFile = true,
+    this.path,
   });
   final Function() onTap;
   final Function() onRemove;
-  final String? selectedImage;
-  final bool isFile;
+  final PlatformFile? selectedImage;
+  final String? path;
 
   @override
   Widget build(BuildContext context) {
@@ -48,14 +48,14 @@ class CustomSelectImageWidget extends StatelessWidget {
             ),
           ),
         ),
-        if (selectedImage != null) ...[
+        if (selectedImage != null || path != null) ...[
           SizedBox(height: 20),
           InkWell(
             onTap: () {
               Utils.showCustomDialog(
                 context: context,
                 alignment: Alignment.center,
-                child: ImageViewer(path: selectedImage, isFile: isFile),
+                child: ImageViewer(path: path, bytes: selectedImage?.bytes),
               );
             },
             borderRadius: BorderRadius.circular(12),
@@ -67,7 +67,9 @@ class CustomSelectImageWidget extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        basename(selectedImage!),
+                        selectedImage != null
+                            ? selectedImage!.name
+                            : path ?? "",
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           color: Theme.of(

@@ -1,11 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:pos/data/datasource/local_db/shared_preference_service.dart';
 
 import '../../presentations/controller/user_controller.dart';
@@ -138,12 +137,15 @@ class Utils {
     );
   }
 
-  static Future<File?> pickImage() async {
+  static Future<PlatformFile?> pickImage() async {
     try {
-      final ImagePicker picker = ImagePicker();
-      final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-      if (image != null) {
-        return File(image.path);
+      FilePickerResult? result = await FilePicker.pickFiles(
+        type: FileType.image,
+        allowMultiple: false,
+        withData: true,
+      );
+      if (result != null) {
+        return result.files.single;
       }
       return null;
     } on Exception catch (e) {
@@ -259,13 +261,13 @@ class Utils {
 
   static void showImageViewer(
     BuildContext context, {
-    required String selectedImage,
-    required bool isFile,
+    required String path,
+    Uint8List? bytes,
   }) {
     showCustomDialog(
       context: context,
       alignment: Alignment.center,
-      child: ImageViewer(path: selectedImage, isFile: isFile),
+      child: ImageViewer(path: path, bytes: bytes),
     );
   }
 

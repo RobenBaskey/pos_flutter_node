@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:pos/core/network/api_url.dart';
 import 'package:pos/presentations/widgets/custom_image.dart';
@@ -5,9 +7,9 @@ import 'package:pos/presentations/widgets/custom_image.dart';
 import '../../core/theme/app_colors.dart';
 
 class ImageViewer extends StatelessWidget {
-  const ImageViewer({super.key, required this.path, this.isFile = false});
+  const ImageViewer({super.key, required this.path, this.bytes});
   final String? path;
-  final bool isFile;
+  final Uint8List? bytes;
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +23,8 @@ class ImageViewer extends StatelessWidget {
           children: [
             Center(
               child: CustomImage(
-                path: isFile ? path : ApiUrl.getImageBaseUrl() + path!,
-                isFile: isFile,
+                path: ApiUrl.getImageBaseUrl() + path!,
+                bytes: bytes,
                 fit: BoxFit.contain,
               ),
             ),

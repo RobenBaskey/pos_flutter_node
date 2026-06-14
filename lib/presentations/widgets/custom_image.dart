@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -10,40 +10,24 @@ class CustomImage extends StatelessWidget {
   const CustomImage({
     super.key,
     required this.path,
+    this.bytes,
     this.fit = BoxFit.contain,
     this.height,
     this.width,
     this.color,
-    this.isFile = false,
   });
 
   final String? path;
+  final Uint8List? bytes;
   final BoxFit fit;
   final double? height, width;
   final Color? color;
-  final bool isFile;
 
   @override
   Widget build(BuildContext context) {
-    final imagePath = path == null || path == ""
-        ? AppImages.squrePlaceholder
-        : path;
-    // if (imagePath!.endsWith('.svg')) {
-    //   return SizedBox(
-    //     height: height,
-    //     width: width,
-    //     child: SvgPicture.asset(
-    //       imagePath,
-    //       fit: fit,
-    //       height: height,
-    //       width: width,
-    //     ),
-    //   );
-    // }
-
-    if (isFile) {
-      return Image.file(
-        File(imagePath!),
+    if (bytes != null) {
+      return Image.memory(
+        bytes!,
         fit: fit,
         color: color,
         height: height,
@@ -56,6 +40,10 @@ class CustomImage extends StatelessWidget {
         },
       );
     }
+    final imagePath = path == null || path == ""
+        ? AppImages.squrePlaceholder
+        : path;
+
     if (imagePath!.startsWith('http') ||
         imagePath.startsWith('https') ||
         imagePath.startsWith('www.')) {

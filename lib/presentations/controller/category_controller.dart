@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos/core/constants/enum.dart';
@@ -18,7 +19,7 @@ class CategoryController extends GetxController {
   final TextEditingController categoryNameController = TextEditingController();
   final TextEditingController categoryDescriptionController =
       TextEditingController();
-  var selectedImagePath = Rxn<String>();
+  var selectedLocalImage = Rxn<PlatformFile>();
   var isStatusActive = true.obs;
 
   ///delete category
@@ -52,7 +53,7 @@ class CategoryController extends GetxController {
   Future pickImage() async {
     final image = await Utils.pickImage();
     if (image != null) {
-      selectedImagePath.value = image.path;
+      selectedLocalImage.value = image;
     }
   }
 
@@ -62,7 +63,7 @@ class CategoryController extends GetxController {
       return;
     }
 
-    if (selectedImagePath.value == null) {
+    if (selectedLocalImage.value == null) {
       Utils.showSnackBar("Category image is required");
       return;
     }
@@ -71,14 +72,14 @@ class CategoryController extends GetxController {
       isCategoryAdding.value = true;
       var result = await _categoryRepo.addCategory(
         name: categoryNameController.text.trim(),
-        image: selectedImagePath.value!,
+        file: selectedLocalImage.value!,
         parentId: category?.id,
         status: isStatusActive.value,
       );
       if (result) {
         categoryNameController.clear();
         categoryDescriptionController.clear();
-        selectedImagePath.value = null;
+        selectedLocalImage.value = null;
         Get.back(); // Close the add category dialog
         Utils.showSnackBar(
           "Category added successfully",
@@ -116,6 +117,7 @@ class CategoryController extends GetxController {
   }
 
   void initUpdate(CategoryEntity item) {
+    selectedLocalImage.value = null;
     selectedCategoryEntity.value = item;
     updateNameController.text = item.name ?? "";
     isStatusActive.value = item.status ?? false;
@@ -127,18 +129,20 @@ class CategoryController extends GetxController {
       return;
     }
 
+
     try {
       isCategoryAdding.value = true;
       var result = await _categoryRepo.updateCategory(
         id: category?.id ?? "",
         name: updateNameController.text.trim(),
-        image: selectedImagePath.value,
+        file: selectedLocalImage.value,
         status: isStatusActive.value,
+        parentId: category?.categoryId,
       );
       if (result) {
         updateNameController.clear();
         updateDescriptionController.clear();
-        selectedImagePath.value = null;
+        selectedLocalImage.value = null;
         Get.back(); // Close the add category dialog
         Utils.showSnackBar("Category updated successfully", isSuccess: true);
         getCategories(isLoading: false);

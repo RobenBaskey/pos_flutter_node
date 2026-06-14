@@ -119,7 +119,7 @@ class PosTerminal extends StatelessWidget {
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Icon(
+                                      FaIcon(
                                         FontAwesomeIcons.circleCheck,
                                         size: 10,
                                         color: Colors.green,
@@ -219,7 +219,7 @@ class PosTerminal extends StatelessWidget {
                                   ).colorScheme.outline,
                                   child: Row(
                                     children: [
-                                      Icon(
+                                      FaIcon(
                                         FontAwesomeIcons.penToSquare,
                                         color: Colors.blue,
                                         size: 14,

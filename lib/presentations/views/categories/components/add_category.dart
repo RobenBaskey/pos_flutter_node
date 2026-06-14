@@ -110,9 +110,9 @@ class AddCategory extends GetView<CategoryController> {
                         controller.pickImage();
                       },
                       onRemove: () {
-                        controller.selectedImagePath.value = null;
+                        controller.selectedLocalImage.value = null;
                       },
-                      selectedImage: controller.selectedImagePath.value,
+                      selectedImage: controller.selectedLocalImage.value,
                     ),
                   ),
                   SizedBox(height: 20),
@@ -158,12 +158,15 @@ class AddCategory extends GetView<CategoryController> {
                         horizontalPadding: 20,
                       ),
                       SizedBox(width: 20),
-                      CustomButton(
-                        onTap: () {
-                          controller.addCategory(category: category);
-                        },
-                        title:
-                            "Create ${category != null ? "Sub " : ""}Category",
+                      Obx(
+                        () => CustomButton(
+                          onTap: () {
+                            controller.addCategory(category: category);
+                          },
+                          title:
+                              "Create ${category != null ? "Sub " : ""}Category",
+                          isLoading: controller.isCategoryAdding.value,
+                        ),
                       ),
                     ],
                   ),

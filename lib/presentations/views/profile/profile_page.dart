@@ -58,7 +58,7 @@ class ProfilePage extends GetView<UserController> {
                       color: Theme.of(context).scaffoldBackgroundColor,
                       child: Row(
                         children: [
-                          Icon(
+                          FaIcon(
                             FontAwesomeIcons.penToSquare,
                             size: 18,
                             color: AppColors.primary,

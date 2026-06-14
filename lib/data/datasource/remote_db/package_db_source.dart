@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:pos/core/network/api_url.dart';
 import 'package:pos/core/network/dio_client.dart';
 import 'package:pos/data/model/package_model.dart';
@@ -5,14 +6,14 @@ import 'package:pos/data/model/package_model.dart';
 abstract class PackageDbSource {
   Future<bool> insertPackage({
     required PackageModel model,
-    required String imagePath,
+    required PlatformFile file,
   });
   Future<List<PackageModel>> getPackages();
   Future<PackageModel?> getSinglePackage(String id);
   Future<bool> updatePackage({
     required String id,
     required PackageModel model,
-    String? imagePath,
+    PlatformFile? file,
   });
   Future<bool> deletePackage({required String id});
   Future<bool> insertContent({
@@ -41,13 +42,13 @@ class PackageDbSourceImpl extends PackageDbSource {
   @override
   Future<bool> insertPackage({
     required PackageModel model,
-    required String imagePath,
+    required PlatformFile file,
   }) async {
     try {
       await _clients.postWithFile(
         url: ApiUrl.insertPackageUrl(),
         body: model.toJson(),
-        filePath: imagePath,
+        file: file,
         fileKeyName: "image",
         isTokenRequired: true,
       );
@@ -105,15 +106,15 @@ class PackageDbSourceImpl extends PackageDbSource {
   Future<bool> updatePackage({
     required String id,
     required PackageModel model,
-    String? imagePath,
+    PlatformFile? file,
   }) async {
     var body = {"package_id": id, "name": model.name, "price": model.price};
-    if (imagePath != null) {
+    if (file != null) {
       try {
         await _clients.putWithFile(
           url: ApiUrl.updatePackageUrl(),
           body: body,
-          filePath: imagePath,
+          file: file,
           fileKeyName: "image",
           isTokenRequired: true,
         );

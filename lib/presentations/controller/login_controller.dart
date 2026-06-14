@@ -14,10 +14,10 @@ class LoginController extends GetxController {
   LoginController(this._userRepo, this._authRepo);
 
   final TextEditingController phoneController = TextEditingController(
-    // text: "01700000000",
+    text: "01700000000",
   );
   final TextEditingController passwordController = TextEditingController(
-    //text: "admin12345",
+    text: "admin12345",
   );
 
   var isLoginLoading = false.obs;

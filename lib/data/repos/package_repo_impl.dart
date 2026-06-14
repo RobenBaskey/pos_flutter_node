@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:pos/data/datasource/remote_db/package_db_source.dart';
 import 'package:pos/data/mapper/package_mapper.dart';
 import 'package:pos/data/model/package_model.dart';
@@ -26,22 +27,18 @@ class PackageRepoImpl extends PackageRepo {
   @override
   Future<bool> insertPackage({
     required PackageEntity model,
-    required String imagePath,
+    required PlatformFile file,
   }) {
-    return _source.insertPackage(model: model.toModel(), imagePath: imagePath);
+    return _source.insertPackage(model: model.toModel(), file: file);
   }
 
   @override
   Future<bool> updatePackage({
     required String id,
     required PackageEntity model,
-    String? imagePath,
+    PlatformFile? file,
   }) {
-    return _source.updatePackage(
-      id: id,
-      model: model.toModel(),
-      imagePath: imagePath,
-    );
+    return _source.updatePackage(id: id, model: model.toModel(), file: file);
   }
 
   @override
@@ -55,7 +52,7 @@ class PackageRepoImpl extends PackageRepo {
       packageId: packageId,
       name: name,
       isActive: isActive,
-      limit: limit
+      limit: limit,
     );
   }
 
@@ -72,7 +69,7 @@ class PackageRepoImpl extends PackageRepo {
       contentId: contentId,
       name: name,
       isActive: isActive,
-      limit: limit
+      limit: limit,
     );
   }
 

@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:pos/data/datasource/remote_db/category_db_source.dart';
 
 import '../../domain/entities/category_entity.dart';
@@ -9,14 +10,14 @@ class CategoryRepoImpl implements CategoryRepo {
   @override
   Future<bool> addCategory({
     required String name,
+    required PlatformFile file,
     String? parentId,
-    required String image,
     bool? status,
   }) {
     return categoryDbSource.addCategory(
       name: name,
       parentId: parentId,
-      image: image,
+      file: file,
       status: status,
     );
   }
@@ -36,14 +37,15 @@ class CategoryRepoImpl implements CategoryRepo {
     required String id,
     required String name,
     String? parentId,
-    String? image,
+    PlatformFile? file,
     bool? status,
   }) {
     return categoryDbSource.updateCategory(
       id: id,
       name: name,
-      image: image,
+      file: file,
       status: status,
+      parentId: parentId,
     );
   }
 }

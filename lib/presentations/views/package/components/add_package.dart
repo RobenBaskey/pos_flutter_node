@@ -74,17 +74,11 @@ class AddPackage extends GetView<PackageController> {
                   Row(
                     children: [
                       Expanded(
-                        child: _packgeTimeType(
-                          context,
-                          isMonthly: true,
-                        ),
+                        child: _packgeTimeType(context, isMonthly: true),
                       ),
                       SizedBox(width: 12),
                       Expanded(
-                        child: _packgeTimeType(
-                          context,
-                          isMonthly: false,
-                        ),
+                        child: _packgeTimeType(context, isMonthly: false),
                       ),
                     ],
                   ),
@@ -97,10 +91,10 @@ class AddPackage extends GetView<PackageController> {
                         controller.pickImage();
                       },
                       onRemove: () {
-                        controller.packageImage.value = null;
+                        controller.localSelectedPackage.value = null;
                       },
-                      selectedImage: controller.packageImage.value,
-                      isFile: package == null,
+                      selectedImage: controller.localSelectedPackage.value,
+                      path: controller.selectedPackage.value?.image,
                     ),
                   ),
 

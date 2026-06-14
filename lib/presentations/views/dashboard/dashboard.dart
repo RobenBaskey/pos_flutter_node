@@ -58,7 +58,7 @@ class DashboardPage extends GetView<DashboardController> {
                                   data:
                                       "${controller.dashboardData.value?.totalCategories ?? 0}",
                                   content: "Active categories",
-                                  icon: Icons.folder_open_rounded,
+                                  icon: FontAwesomeIcons.folderOpen,
                                   color: Colors.blue,
                                 ),
                                 SizedBox(width: 20),
@@ -118,7 +118,7 @@ class DashboardPage extends GetView<DashboardController> {
                                   data:
                                       "${controller.dashboardData.value?.totalBookings ?? 0}",
                                   content: "Total Service Bookings",
-                                  icon: Icons.shopping_cart_outlined,
+                                  icon: FontAwesomeIcons.bagShopping,
                                   size: 18,
                                   color: Colors.redAccent,
                                 ),
@@ -128,7 +128,7 @@ class DashboardPage extends GetView<DashboardController> {
                                   title: "TOTAL POS TERMINALS",
                                   data: "1",
                                   content: "Active Terminals",
-                                  icon: Icons.monitor,
+                                  icon: FontAwesomeIcons.display,
                                   color: Colors.blue,
                                   size: 18,
                                 ),
@@ -148,7 +148,7 @@ class DashboardPage extends GetView<DashboardController> {
                             Expanded(
                               child: _dashboardChartWidget(
                                 title: "Customer Category Distribution",
-                                icon: Icons.pie_chart,
+                                icon: FontAwesomeIcons.chartPie,
                                 data:
                                     controller
                                         .dashboardData
@@ -317,7 +317,7 @@ class DashboardPage extends GetView<DashboardController> {
 
   Widget _dashboardChartWidget({
     required String title,
-    required IconData icon,
+    required FaIconData icon,
     required List<ErDistributionByCategoryEntity> data,
     required String itemType,
     double size = 24,
@@ -330,7 +330,7 @@ class DashboardPage extends GetView<DashboardController> {
             padding: const EdgeInsets.all(20.0),
             child: Row(
               children: [
-                Icon(icon, color: AppColors.primary, size: size),
+                FaIcon(icon, color: AppColors.primary, size: size),
                 SizedBox(width: 8),
                 Expanded(
                   child: Text(
@@ -392,7 +392,7 @@ class DashboardPage extends GetView<DashboardController> {
     required String title,
     required String data,
     required String content,
-    required IconData icon,
+    required FaIconData icon,
     required Color color,
     double size = 20,
     double fontSize = 14,
@@ -434,7 +434,7 @@ class DashboardPage extends GetView<DashboardController> {
             CircleAvatar(
               radius: 26,
               backgroundColor: color.withValues(alpha: 0.2),
-              child: Icon(icon, color: color, size: size),
+              child: FaIcon(icon, color: color, size: size),
             ),
           ],
         ),

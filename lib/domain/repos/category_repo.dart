@@ -1,10 +1,11 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:pos/domain/entities/category_entity.dart';
 
 abstract class CategoryRepo {
   Future<bool> addCategory({
     required String name,
+    required PlatformFile file,
     String? parentId,
-    required String image,
     bool? status,
   });
 
@@ -12,7 +13,7 @@ abstract class CategoryRepo {
     required String id,
     required String name,
     String? parentId,
-    String? image,
+    PlatformFile? file,
     bool? status,
   });
 

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:pos/core/utils/utils.dart';
@@ -109,45 +110,36 @@ class DioClients {
   Future<dynamic> postWithFile({
     required String url,
     required Map<String, dynamic> body,
-    required String filePath,
+    required PlatformFile file,
     required String fileKeyName,
     bool isTokenRequired = false,
   }) async {
     var token = Utils.getToken();
 
-    if (filePath.isEmpty) {
-      throw Exception("Please select your image");
-    }
-
     var headers = <String, String>{};
+
     if (isTokenRequired) {
       if (token.isEmpty) {
         throw Exception("Token required");
       }
+
       headers = {'Authorization': 'Bearer $token'};
     }
 
     var data = FormData.fromMap({
       ...body,
-      fileKeyName: await MultipartFile.fromFile(
-        filePath,
-        filename: basename(filePath),
-      ),
+      fileKeyName: MultipartFile.fromBytes(file.bytes!, filename: file.path),
     });
 
-    try {
-      var dio = Dio();
-      var response = await dio.post(
-        url,
-        options: Options(headers: headers),
-        data: data,
-      );
+    final dio = Dio();
 
-      return response.data;
-    } on DioException catch (error) {
-      var apiException = DioErrorHandler.handleError(error);
-      throw apiException;
-    }
+    final response = await dio.post(
+      url,
+      options: Options(headers: headers),
+      data: data,
+    );
+
+    return response.data;
   }
 
   ///Upload gallery image
@@ -225,13 +217,13 @@ class DioClients {
   Future<dynamic> putWithFile({
     required String url,
     required Map<String, dynamic> body,
-    required String filePath,
+    required PlatformFile file,
     required String fileKeyName,
     bool isTokenRequired = false,
   }) async {
     var token = Utils.getToken();
 
-    if (filePath.isEmpty) {
+    if (file.path!.isEmpty) {
       throw Exception("Please select your image");
     }
 
@@ -245,10 +237,7 @@ class DioClients {
 
     var data = FormData.fromMap({
       ...body,
-      fileKeyName: await MultipartFile.fromFile(
-        filePath,
-        filename: basename(filePath),
-      ),
+      fileKeyName: MultipartFile.fromBytes(file.bytes!, filename: file.name),
     });
 
     try {

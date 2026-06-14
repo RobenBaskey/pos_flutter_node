@@ -180,10 +180,8 @@ class CategoryPage extends GetView<CategoryController> {
                                                               null) {
                                                             Utils.showImageViewer(
                                                               context,
-                                                              selectedImage:
-                                                                  catItem
-                                                                      .image!,
-                                                              isFile: false,
+                                                              path: catItem
+                                                                  .image!,
                                                             );
                                                           }
                                                         },
@@ -247,7 +245,7 @@ class CategoryPage extends GetView<CategoryController> {
                                                             ),
                                                           );
                                                         },
-                                                        icon: Icon(
+                                                        icon: FaIcon(
                                                           FontAwesomeIcons.plus,
                                                           size: 16,
                                                           color:
@@ -280,7 +278,7 @@ class CategoryPage extends GetView<CategoryController> {
                                                                 ),
                                                           );
                                                         },
-                                                        icon: Icon(
+                                                        icon: FaIcon(
                                                           FontAwesomeIcons
                                                               .penToSquare,
                                                           size: 16,
@@ -410,9 +408,27 @@ class CategoryPage extends GetView<CategoryController> {
                                                                               .min,
                                                                       children: [
                                                                         IconButton(
-                                                                          onPressed:
-                                                                              () {},
-                                                                          icon: Icon(
+                                                                          onPressed: () {
+                                                                            controller.initUpdate(
+                                                                              childItem,
+                                                                            );
+                                                                            
+                                                                            Utils.showCustomDialog(
+                                                                              context: context,
+                                                                              alignment: Alignment.center,
+                                                                              bearerColor:
+                                                                                  Theme.of(
+                                                                                    context,
+                                                                                  ).colorScheme.outline.withValues(
+                                                                                    alpha: 0.4,
+                                                                                  ),
+                                                                              child: UpdateCategory(
+                                                                                category: childItem,
+                                                                                parentId: catItem.id,
+                                                                              ),
+                                                                            );
+                                                                          },
+                                                                          icon: FaIcon(
                                                                             FontAwesomeIcons.penToSquare,
                                                                             size:
                                                                                 16,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:pos/core/constants/app_constants.dart';
 import 'package:pos/core/theme/app_colors.dart';
@@ -78,7 +79,7 @@ class SideBar extends GetView<MainShellController> {
 
   Widget _navBarItem({
     required int index,
-    required IconData icon,
+    required FaIconData icon,
     required String title,
     double size = 20,
     Color? color,
@@ -111,7 +112,7 @@ class SideBar extends GetView<MainShellController> {
                       SizedBox(
                         height: 30,
                         width: 30,
-                        child: Icon(
+                        child: FaIcon(
                           icon,
                           size: size,
                           color:

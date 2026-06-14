@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:pos/core/network/dio_client.dart';
 
 import '../../../core/network/api_url.dart';
@@ -6,15 +7,15 @@ import '../../model/category_model.dart';
 abstract class CategoryDbSource {
   Future<bool> addCategory({
     required String name,
+    required PlatformFile file,
     String? parentId,
     bool? status,
-    required String image,
   });
   Future<bool> updateCategory({
     required String id,
     required String name,
     String? parentId,
-    String? image,
+    PlatformFile? file,
     bool? status,
   });
   Future<bool> deleteCategory({required String id});
@@ -28,9 +29,9 @@ class CategoryDbSourceImpl extends CategoryDbSource {
   @override
   Future<bool> addCategory({
     required String name,
+    required PlatformFile file,
     String? parentId,
     bool? status,
-    required String image,
   }) async {
     try {
       await dioClients.postWithFile(
@@ -44,7 +45,7 @@ class CategoryDbSourceImpl extends CategoryDbSource {
                 "status": status,
               },
         isTokenRequired: true,
-        filePath: image,
+        file: file,
         fileKeyName: "image",
       );
       return true;
@@ -71,23 +72,36 @@ class CategoryDbSourceImpl extends CategoryDbSource {
     required String id,
     required String name,
     String? parentId,
-    String? image,
+    PlatformFile? file,
     bool? status,
   }) async {
     try {
-      if (image != null) {
+      Map<String, dynamic> body = {};
+      if (parentId == null) {
+        body = {"id": id, "name": name, "status": status};
+      } else {
+        body = {
+          "id": id,
+          "name": name,
+          "category_id": parentId,
+          "is_subcategory": true,
+          "status": status,
+        };
+      }
+      print(body);
+      if (file != null) {
         await dioClients.putWithFile(
           url: ApiUrl.updateCategoryUrl(),
-          body: {"id": id, "name": name},
+          body: body,
           isTokenRequired: true,
-          filePath: image,
+          file: file,
           fileKeyName: "image",
         );
         return true;
       } else {
         await dioClients.put(
           url: ApiUrl.updateCategoryUrl(),
-          body: {"id": id, "name": name},
+          body: body,
           isTokenRequired: true,
         );
         return true;

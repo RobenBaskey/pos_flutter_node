@@ -1,16 +1,17 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:pos/domain/entities/package_entity.dart';
 
 abstract class PackageRepo {
   Future<bool> insertPackage({
     required PackageEntity model,
-    required String imagePath,
+    required PlatformFile file,
   });
   Future<List<PackageEntity>> getPackages();
   Future<PackageEntity?> getSinglePackage(String id);
   Future<bool> updatePackage({
     required String id,
     required PackageEntity model,
-    String? imagePath,
+    PlatformFile? file,
   });
   Future<bool> deletePackage({required String id});
   Future<bool> insertContent({

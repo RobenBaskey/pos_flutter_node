@@ -126,7 +126,7 @@ class PurchaseRequisition extends StatelessWidget {
                               ),
                               IconButton(
                                 onPressed: () {},
-                                icon: Icon(
+                                icon: FaIcon(
                                   FontAwesomeIcons.penToSquare,
                                   size: 16,
                                   color: AppColors.secondary,

@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos/core/constants/enum.dart';
@@ -18,7 +19,7 @@ class PackageController extends GetxController {
   var isPackageAdding = false.obs;
   final packageNameController = TextEditingController();
   final packagePriceController = TextEditingController();
-  var packageImage = Rxn<String>();
+  var localSelectedPackage = Rxn<PlatformFile>();
   var isMonthly = false.obs;
 
   ///update package
@@ -65,7 +66,7 @@ class PackageController extends GetxController {
       return;
     }
 
-    if (packageImage.value == null) {
+    if (localSelectedPackage.value == null) {
       Utils.showSnackBar("Please select an image", title: "Error");
       return;
     }
@@ -75,10 +76,10 @@ class PackageController extends GetxController {
         model: PackageEntity(
           name: packageNameController.text.trim(),
           price: int.tryParse(packagePriceController.text.trim()) ?? 0,
-          image: packageImage.value,
+          image: "",
           isMonthly: isMonthly.value,
         ),
-        imagePath: packageImage.value!,
+        file: localSelectedPackage.value!,
       );
       Get.back();
       getPackages();
@@ -89,7 +90,7 @@ class PackageController extends GetxController {
       );
       packageNameController.clear();
       packagePriceController.clear();
-      packageImage.value = null;
+      localSelectedPackage.value = null;
     } on Exception catch (e) {
       debugPrint(e.toString());
       Utils.showSnackBar("Failed to add package", title: "Error");
@@ -103,18 +104,18 @@ class PackageController extends GetxController {
     if (package != null) {
       packageNameController.text = package.name ?? "";
       packagePriceController.text = package.price.toString();
-      packageImage.value = package.image;
+      //packageImage.value = package.image;
     } else {
       packageNameController.clear();
       packagePriceController.clear();
-      packageImage.value = null;
+      localSelectedPackage.value = null;
     }
   }
 
   Future pickImage() async {
     final image = await Utils.pickImage();
     if (image != null) {
-      packageImage.value = image.path;
+      localSelectedPackage.value = image;
     }
   }
 
@@ -127,19 +128,17 @@ class PackageController extends GetxController {
         model: PackageEntity(
           name: packageNameController.text.trim(),
           price: int.tryParse(packagePriceController.text.trim()) ?? 0,
-          image: packageImage.value,
+          image: "",
           isMonthly: isMonthly.value,
         ),
-        imagePath: (packageImage.value?.contains("/v1") ?? false)
-            ? null
-            : packageImage.value,
+        file: localSelectedPackage.value,
       );
       Utils.showSnackBar("Package updated successfully", title: "Success");
       getPackages();
       Navigator.pop(Get.context!);
       packageNameController.clear();
       packagePriceController.clear();
-      packageImage.value = null;
+      localSelectedPackage.value = null;
     } on Exception catch (e) {
       debugPrint(e.toString());
       Utils.showSnackBar("Failed to update package", title: "Error");

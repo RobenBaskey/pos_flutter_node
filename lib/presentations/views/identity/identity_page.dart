@@ -124,7 +124,6 @@ class IdentityPage extends GetView<IdentityController> {
                                           path: identity.user?.image ?? "",
                                           height: 35,
                                           width: 35,
-                                          isNetwork: true,
                                         ),
                                         SizedBox(width: 10),
                                         Expanded(
@@ -144,8 +143,7 @@ class IdentityPage extends GetView<IdentityController> {
                                       onTap: () {
                                         Utils.showImageViewer(
                                           context,
-                                          selectedImage: identity.frontImage,
-                                          isFile: false,
+                                          path: identity.frontImage,
                                         );
                                       },
                                       child: CustomImage(
@@ -162,8 +160,7 @@ class IdentityPage extends GetView<IdentityController> {
                                       onTap: () {
                                         Utils.showImageViewer(
                                           context,
-                                          selectedImage: identity.backImage,
-                                          isFile: false,
+                                          path: identity.backImage,
                                         );
                                       },
                                       child: CustomImage(

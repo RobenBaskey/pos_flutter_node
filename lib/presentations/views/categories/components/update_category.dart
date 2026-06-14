@@ -8,8 +8,9 @@ import 'package:pos/presentations/widgets/custom_select_image_widget.dart';
 import 'package:pos/presentations/widgets/custom_text_field.dart';
 
 class UpdateCategory extends GetView<CategoryController> {
-  const UpdateCategory({super.key, required this.category});
+  const UpdateCategory({super.key, required this.category, this.parentId});
   final CategoryEntity category;
+  final String? parentId;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,7 @@ class UpdateCategory extends GetView<CategoryController> {
               child: Row(
                 children: [
                   Text(
-                    "Update Category",
+                    "Update ${category.isSubcategory == true ? "Sub" : ""} Category",
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
                   ),
                   Spacer(),
@@ -63,12 +64,10 @@ class UpdateCategory extends GetView<CategoryController> {
                         controller.pickImage();
                       },
                       onRemove: () {
-                        controller.selectedImagePath.value = null;
+                        controller.selectedLocalImage.value = null;
                       },
-                      selectedImage:
-                          controller.selectedImagePath.value ??
-                          controller.selectedCategoryEntity.value?.image,
-                      isFile: controller.selectedImagePath.value != null,
+                      selectedImage: controller.selectedLocalImage.value,
+                      path: controller.selectedCategoryEntity.value?.image,
                     ),
                   ),
                   SizedBox(height: 20),

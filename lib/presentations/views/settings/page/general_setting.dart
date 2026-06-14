@@ -5,8 +5,8 @@ import 'package:pos/presentations/controller/setting_controller.dart';
 
 import '../../../../core/constants/app_sizes.dart';
 import '../../../widgets/custom_button.dart';
-import '../../../widgets/custom_image.dart';
 import '../../../widgets/custom_divider.dart';
+import '../../../widgets/custom_image.dart';
 import '../../../widgets/custom_text_field.dart';
 
 class GeneralSetting extends GetView<SettingController> {
@@ -250,7 +250,6 @@ class _SettingImage extends StatelessWidget {
 
     return CustomImage(
       path: imagePath,
-      isFile: isFile,
       fit: BoxFit.cover,
       width: double.infinity,
       height: double.infinity,

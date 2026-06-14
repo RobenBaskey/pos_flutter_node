@@ -203,7 +203,7 @@ class JobTypePage extends GetView<JobTypeController> {
                                                 onPressed: () {
                                                   controller.initUpdate(job);
                                                 },
-                                                icon: Icon(
+                                                icon: FaIcon(
                                                   FontAwesomeIcons.penToSquare,
                                                   size: 16,
                                                   color: AppColors.secondary,

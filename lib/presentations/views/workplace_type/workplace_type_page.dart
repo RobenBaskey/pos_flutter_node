@@ -209,7 +209,7 @@ class WorkplaceTypePage extends GetView<WorkplaceTypeController> {
                                                 onPressed: () {
                                                   controller.initUpdate(item);
                                                 },
-                                                icon: Icon(
+                                                icon: FaIcon(
                                                   FontAwesomeIcons.penToSquare,
                                                   size: 16,
                                                   color: AppColors.secondary,
