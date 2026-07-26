@@ -1,9 +1,9 @@
 class ApiUrl {
-  static const String _rootUrl = "https://api.jonosokti.com/api/";
-  //static const String _rootUrl = "http://localhost:8080/api/";
+  //static const String _rootUrl = "https://api.jonosokti.com/api/";
+  static const String _rootUrl = "http://localhost:8080/api/";
   static const String _baseUrl = "${_rootUrl}v1";
-  //static String getImageBaseUrl() => "http://localhost:8080";
-  static String getImageBaseUrl() => "https://api.jonosokti.com";
+  static String getImageBaseUrl() => "http://localhost:8080";
+  //static String getImageBaseUrl() => "https://api.jonosokti.com";
 
   ///auth urls
   static String loginUrl() => "$_baseUrl/admin/login";
@@ -70,6 +70,13 @@ class ApiUrl {
   static String deleteCouponUrl(String id) =>
       "$_baseUrl/admin/moderator/delete-coupen?id=$id";
 
+  ///banner
+  static String getBannerUrl() => "$_baseUrl/admin/moderator/get-admin-banners";
+  static String insertBannerUrl() => "$_baseUrl/admin/moderator/insert-banner";
+  static String updateBannerUrl() => "$_baseUrl/admin/moderator/update-banner";
+  static String deleteBannerUrl(String id) =>
+      "$_baseUrl/admin/moderator/delete-banner?id=$id";
+
   ///user url
   static String getUserUrl({
     required String type,
@@ -101,4 +108,10 @@ class ApiUrl {
 
   static String insertSettingContent() =>
       "$_baseUrl/admin/moderator/insert-setting-content";
+
+  ///zone url
+  static String insertZone = "$_baseUrl/admin/moderator/insert-zone";
+  static String getZone = "$_baseUrl/admin/moderator/get-admin-zones";
+  static String updateZone = "$_baseUrl/admin/moderator/update-zone";
+  static String deleteZone = "$_baseUrl/admin/moderator/delete-zone";
 }

@@ -38,6 +38,9 @@ dependencies:
   flutter_quill: ^11.5.1
   vsc_quill_delta_to_html: ^1.0.5
 
+  #map
+  google_maps_flutter: ^2.17.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

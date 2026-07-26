@@ -239,7 +239,7 @@ class JobsPage extends GetView<JobController> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _detailLine(Icons.location_pin, job.address ?? "No address"),
+              _detailLine(Icons.location_pin, job.zone?.name ?? "No address"),
               SizedBox(height: 4),
               _detailLine(Icons.work_outline, job.jobType?.title ?? "No type"),
               SizedBox(height: 4),
@@ -636,7 +636,7 @@ class JobsPage extends GetView<JobController> {
                   ),
                 ),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
                       width: 44,
@@ -730,7 +730,7 @@ class JobsPage extends GetView<JobController> {
                             _detailItem("Updated", _formatDate(job.updatedAt)),
                             _detailItem("Email", job.emailUrl ?? "N/A"),
                             _detailItem("Video", _emptyAsNA(job.video)),
-                            _detailItem("Address", job.address ?? "N/A"),
+                            _detailItem("Zone", job.zone?.name ?? "N/A"),
                             _detailItem(
                               "Location",
                               _formatCoordinates(job.location?.coordinates),

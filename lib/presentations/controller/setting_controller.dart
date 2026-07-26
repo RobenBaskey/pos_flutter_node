@@ -38,9 +38,11 @@ class SettingController extends GetxController {
   var settingItemList = [
     "General Setting",
     "About Us",
-    "Contact Us",
+    "How It Works",
     "Terms & Condition",
     "Privacy Policy",
+    "Payment Policy",
+    "Terms of Service",
   ].obs;
 
   var selectedItem = "General Setting".obs;
@@ -63,9 +65,11 @@ class SettingController extends GetxController {
 
   final settingKeys = const {
     "About Us": "about_us",
-    "Contact Us": "contact_us",
+    "How It Works": "how_it_works",
     "Terms & Condition": "terms_condition",
     "Privacy Policy": "privacy_policy",
+    "Payment Policy": "payment_policy",
+    "Terms of Service": "terms_of_use",
   };
 
   String get selectedKey => settingKeys[selectedItem.value] ?? "about_us";
@@ -143,15 +147,24 @@ class SettingController extends GetxController {
 
   Future onSave() async {
     // Get delta json
-    final deltaJson = selectedQuillController.document.toDelta().toJson();
+    try {
+      final deltaJson = selectedQuillController.document.toDelta().toJson();
 
-    // Convert delta to html
-    final converter = QuillDeltaToHtmlConverter(List.castFrom(deltaJson));
+      // Convert delta to html
+      final converter = QuillDeltaToHtmlConverter(List.castFrom(deltaJson));
 
-    final html = converter.convert();
+      final html = converter.convert();
 
-    await _repo.insertContent(selectedKey, html);
-    settingContents[selectedKey] = html;
+      await _repo.insertContent(selectedKey, html);
+      settingContents[selectedKey] = html;
+      Utils.showSnackBar(
+        "Content Inserted successfully",
+        title: "Success",
+        type: SnackBarType.success,
+      );
+    } on Exception catch (e) {
+      debugPrint("Error to insert content. ${e.toString()}");
+    }
   }
 
   Future<void> onPreview(BuildContext context) async {

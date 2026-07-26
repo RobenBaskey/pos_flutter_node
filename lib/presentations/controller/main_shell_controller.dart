@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:pos/data/model/shell_model.dart';
 import 'package:pos/presentations/views/ai_reports/ai_reports.dart';
+import 'package:pos/presentations/views/banner/banner_page.dart';
 import 'package:pos/presentations/views/bookings/bookings_page.dart';
 import 'package:pos/presentations/views/categories/category_page.dart';
 import 'package:pos/presentations/views/coupon/coupon_page.dart';
@@ -18,6 +19,7 @@ import 'package:pos/presentations/views/reports/report_page.dart';
 import 'package:pos/presentations/views/roles/role_page.dart';
 import 'package:pos/presentations/views/settings/settings_page.dart';
 import 'package:pos/presentations/views/workplace_type/workplace_type_page.dart';
+import 'package:pos/presentations/views/zones/zone_page.dart';
 
 import '../views/customers/customer_page.dart';
 
@@ -60,10 +62,11 @@ class MainShellController extends GetxController {
       name: "Package",
       page: PackagePage(),
     ),
+    ShellModel(icon: FontAwesomeIcons.tag, name: "Coupen", page: CouponPage()),
     ShellModel(
-      icon: FontAwesomeIcons.tag,
-      name: "Coupen",
-      page: CouponPage(),
+      icon: FontAwesomeIcons.flag,
+      name: "Banner",
+      page: BannerPage(),
       isDivider: true,
     ),
 
@@ -112,6 +115,11 @@ class MainShellController extends GetxController {
       isDivider: true,
     ),
 
+    ShellModel(
+      icon: FontAwesomeIcons.locationPin,
+      name: "Zones",
+      page: ZonePage(),
+    ),
     ShellModel(
       icon: FontAwesomeIcons.gear,
       name: "Settings",

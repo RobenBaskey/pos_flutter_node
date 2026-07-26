@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/state_manager.dart';
 import 'package:pos/core/network/api_url.dart';
 import 'package:pos/core/utils/utils.dart';
@@ -245,9 +244,9 @@ class CategoryPage extends GetView<CategoryController> {
                                                             ),
                                                           );
                                                         },
-                                                        icon: FaIcon(
-                                                          FontAwesomeIcons.plus,
-                                                          size: 16,
+                                                        icon: Icon(
+                                                          Icons.add,
+                                                          size: 20,
                                                           color:
                                                               AppColors.primary,
                                                         ),
@@ -278,9 +277,8 @@ class CategoryPage extends GetView<CategoryController> {
                                                                 ),
                                                           );
                                                         },
-                                                        icon: FaIcon(
-                                                          FontAwesomeIcons
-                                                              .penToSquare,
+                                                        icon: Icon(
+                                                          Icons.edit,
                                                           size: 16,
                                                           color: AppColors
                                                               .secondary,
@@ -412,7 +410,7 @@ class CategoryPage extends GetView<CategoryController> {
                                                                             controller.initUpdate(
                                                                               childItem,
                                                                             );
-                                                                            
+
                                                                             Utils.showCustomDialog(
                                                                               context: context,
                                                                               alignment: Alignment.center,
@@ -428,10 +426,10 @@ class CategoryPage extends GetView<CategoryController> {
                                                                               ),
                                                                             );
                                                                           },
-                                                                          icon: FaIcon(
-                                                                            FontAwesomeIcons.penToSquare,
+                                                                          icon: Icon(
+                                                                            Icons.edit,
                                                                             size:
-                                                                                16,
+                                                                                20,
                                                                             color:
                                                                                 AppColors.secondary,
                                                                           ),

@@ -1,4 +1,5 @@
 import 'package:pos/data/model/category_model.dart';
+import 'package:pos/data/model/zone_model.dart';
 import 'package:pos/domain/entities/job_entity.dart';
 
 import 'job_type_model.dart';
@@ -19,6 +20,7 @@ class JobModel extends JobEntity {
     super.status,
     super.createdAt,
     super.updatedAt,
+    super.zone,
     super.user,
     super.jobType,
     super.workplace,
@@ -48,6 +50,7 @@ class JobModel extends JobEntity {
     updatedAt: json["updated_at"] == null
         ? null
         : DateTime.parse(json["updated_at"]),
+    zone: json["zone"] == null ? null : ZoneModel.fromJson(json["zone"]),
     user: json["user"] == null ? null : UserModel.fromJson(json["user"]),
     jobType: json["job_type"] == null
         ? null

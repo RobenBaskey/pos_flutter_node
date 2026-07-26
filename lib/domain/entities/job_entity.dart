@@ -1,3 +1,4 @@
+import 'package:pos/data/model/zone_model.dart';
 import 'package:pos/domain/entities/category_entity.dart';
 import 'package:pos/domain/entities/job_type_entity.dart';
 import 'package:pos/domain/entities/user_entity.dart';
@@ -16,6 +17,7 @@ class JobEntity {
   final String? status;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+  final ZoneModel? zone;
   final UserEntity? user;
   final JobTypeEntity? jobType;
   final JobTypeEntity? workplace;
@@ -38,6 +40,7 @@ class JobEntity {
     this.status,
     this.createdAt,
     this.updatedAt,
+    this.zone,
     this.user,
     this.jobType,
     this.workplace,

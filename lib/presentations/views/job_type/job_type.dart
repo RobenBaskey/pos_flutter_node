@@ -1,6 +1,5 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:pos/core/utils/utils.dart';
 import 'package:pos/presentations/controller/job_type_controller.dart';
@@ -203,9 +202,9 @@ class JobTypePage extends GetView<JobTypeController> {
                                                 onPressed: () {
                                                   controller.initUpdate(job);
                                                 },
-                                                icon: FaIcon(
-                                                  FontAwesomeIcons.penToSquare,
-                                                  size: 16,
+                                                icon: Icon(
+                                                  Icons.edit,
+                                                  size: 20,
                                                   color: AppColors.secondary,
                                                 ),
                                               ),

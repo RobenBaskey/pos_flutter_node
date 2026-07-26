@@ -283,4 +283,21 @@ class Utils {
         return Colors.grey;
     }
   }
+
+  static void showCustomLoader({
+    Widget? loadingAnimation,
+    Color? color,
+    double? size,
+  }) {
+    showDialog(
+      context: Get.context!,
+      builder: (context) {
+        return Center(child: loadingAnimation ?? CircularProgressIndicator());
+      },
+    );
+  }
+
+  static void dismissLoadingDialog() {
+    Get.back();
+  }
 }

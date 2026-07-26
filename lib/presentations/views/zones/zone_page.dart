@@ -1,8 +1,8 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pos/presentations/controller/coupon_controller.dart';
-import 'package:pos/presentations/views/coupon/component/add_coupon.dart';
+import 'package:pos/presentations/controller/zone_controller.dart';
+import 'package:pos/presentations/views/zones/widgets/insert_zones.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/utils.dart';
@@ -11,8 +11,8 @@ import '../../widgets/custom_container_shape.dart';
 import '../../widgets/custom_divider.dart';
 import '../../widgets/custom_text_field.dart';
 
-class CouponPage extends GetView<CouponController> {
-  const CouponPage({super.key});
+class ZonePage extends GetView<ZoneController> {
+  const ZonePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class CouponPage extends GetView<CouponController> {
                   children: [
                     Expanded(
                       child: Text(
-                        "Coupon Management",
+                        "Zones Management",
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 20,
@@ -42,9 +42,23 @@ class CouponPage extends GetView<CouponController> {
                     SizedBox(width: 10),
                     IconButton(
                       onPressed: () {
-                        controller.getCoupons();
+                        controller.getZones();
                       },
-                      icon: Icon(Icons.replay_outlined),
+                      icon: Icon(Icons.refresh),
+                    ),
+                    SizedBox(width: 10),
+                    SizedBox(
+                      width: 260,
+                      child: CustomTextField(
+                        onChanged: (value) {},
+                        hintText: "Search roles...",
+                        borderRadius: 8,
+                        borderColor: Theme.of(context).colorScheme.outline,
+                        suffixIcon: Icon(
+                          Icons.search,
+                          color: AppColors.greyLightTextColor,
+                        ),
+                      ),
                     ),
                     SizedBox(width: 10),
                     CustomButton(
@@ -55,7 +69,7 @@ class CouponPage extends GetView<CouponController> {
                           bearerColor: Theme.of(
                             context,
                           ).colorScheme.outline.withValues(alpha: 0.4),
-                          child: AddCoupon(),
+                          child: AddZones(),
                         );
                       },
                       title: "",
@@ -67,26 +81,10 @@ class CouponPage extends GetView<CouponController> {
                           Icon(Icons.add, color: Colors.white),
                           SizedBox(width: 6),
                           Text(
-                            "Add Coupon",
+                            "Add Zone",
                             style: TextStyle(color: Colors.white),
                           ),
                         ],
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    SizedBox(
-                      width: 260,
-                      child: CustomTextField(
-                        hintText: "Search Coupons",
-                        borderRadius: 8,
-                        borderColor: Theme.of(context).colorScheme.outline,
-                        suffixIcon: Icon(
-                          Icons.search,
-                          color: AppColors.greyLightTextColor,
-                        ),
-                        onChanged: (value) {
-                          controller.searchCoupon(value);
-                        },
                       ),
                     ),
                   ],
@@ -95,10 +93,11 @@ class CouponPage extends GetView<CouponController> {
               CustomDivider(),
               Expanded(
                 child: Obx(
-                  () => controller.isLoading.value
-                      ? Center(child: CircularProgressIndicator())
+                  () => controller.isZoneGetLoading.value
+                      ? const Center(child: CircularProgressIndicator())
                       : DataTable2(
-                          dataRowHeight: 100,
+                          minWidth: 900,
+                          dataRowHeight: 70,
                           columnSpacing: 12,
                           horizontalMargin: 12,
                           headingTextStyle: TextStyle(
@@ -109,102 +108,75 @@ class CouponPage extends GetView<CouponController> {
                           dividerThickness: 0.1,
                           columns: [
                             DataColumn2(
-                              label: Center(child: Text("CODE")),
-                              size: ColumnSize.S,
+                              label: Text("NAME"),
+                              size: ColumnSize.M,
+                            ),
+                            DataColumn2(label: Text("LAT"), size: ColumnSize.M),
+                            DataColumn2(
+                              label: Text("LONG"),
+                              size: ColumnSize.M,
                             ),
                             DataColumn2(
-                              label: Center(child: Text("TYPE")),
-                              size: ColumnSize.S,
+                              label: Text("RADIUS"),
+                              size: ColumnSize.M,
                             ),
                             DataColumn2(
-                              label: Center(child: Text("DISCOUNT")),
-                              size: ColumnSize.S,
+                              label: Text("STATUS"),
+                              size: ColumnSize.M,
                             ),
-                            DataColumn2(
-                              label: Center(child: Text("LIMIT")),
-                              size: ColumnSize.S,
-                            ),
-                            DataColumn2(
-                              label: Center(child: Text("USED")),
-                              size: ColumnSize.S,
-                            ),
-                            DataColumn2(
-                              label: Center(child: Text("ACTION")),
-                              fixedWidth: 200,
-                            ),
+                            DataColumn2(label: Text("ACTION"), fixedWidth: 160),
                           ],
                           rows: List<DataRow>.generate(
-                            controller.searchedCouponList.length,
+                            controller.zoneList.length,
                             (index) {
-                              var coupon = controller.searchedCouponList[index];
+                              final zone = controller.zoneList[index];
                               return DataRow(
                                 cells: [
                                   DataCell(
-                                    Center(child: Text(coupon.code ?? "")),
-                                  ),
-                                  DataCell(
-                                    Center(
-                                      child: Text(
-                                        (coupon.discountType ?? "")
-                                            .toUpperCase(),
+                                    Text(
+                                      zone.name,
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                   ),
+                                  DataCell(Text(zone.lat)),
+                                  DataCell(Text(zone.long)),
+                                  DataCell(Text(zone.radius.toString())),
                                   DataCell(
-                                    Center(
-                                      child: Text(
-                                        "${coupon.discountValue ?? 0}${coupon.discountType == "percentage" ? "%" : "৳"}",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: AppColors.primary,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  DataCell(
-                                    Center(
-                                      child: Text(
-                                        coupon.usageLimit?.toString() ?? "0",
-                                      ),
-                                    ),
-                                  ),
-                                  DataCell(
-                                    Center(
-                                      child: Text(
-                                        coupon.usageCount?.toString() ?? "0",
+                                    Text(
+                                      zone.status ? "Active" : "In-Active",
+                                      style: TextStyle(
+                                        color: zone.status
+                                            ? AppColors.primary
+                                            : AppColors.greyLightTextColor,
+                                        fontWeight: FontWeight.w600,
                                       ),
                                     ),
                                   ),
                                   DataCell(
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      mainAxisSize: MainAxisSize.min,
                                       children: [
                                         IconButton(
-                                          onPressed: () {},
-                                          icon: Icon(
-                                            Icons.visibility_outlined,
-                                            size: 20,
-                                            color: AppColors.primary,
-                                          ),
-                                        ),
-                                        IconButton(
                                           onPressed: () {
-                                            controller.initEdit(coupon);
+                                            controller.prepareUpdateData(zone);
                                             Utils.showCustomDialog(
                                               context: context,
-                                              isDissmissable: false,
                                               alignment: Alignment.center,
                                               bearerColor: Theme.of(context)
                                                   .colorScheme
                                                   .outline
                                                   .withValues(alpha: 0.4),
-                                              child: AddCoupon(coupon: coupon),
+                                              child: AddZones(isEdit: true),
                                             );
                                           },
                                           icon: Icon(
-                                            Icons.edit,
-                                            size: 20,
+                                            Icons.edit_outlined,
+                                            size: 18,
                                             color: AppColors.secondary,
                                           ),
                                         ),
@@ -213,19 +185,16 @@ class CouponPage extends GetView<CouponController> {
                                             Utils.showDeleteDialog(
                                               context,
                                               onYesTap: () {
-                                                controller.deleteCoupon(
-                                                  coupon.id ?? "",
-                                                );
+                                                controller.deleteZone(zone.id);
                                               },
-                                              isLoading:
-                                                  controller.isCouponDeleting,
-                                              title: "Delete Coupon",
+                                              title: "Delete Zone",
                                               description:
-                                                  "Do you want to delete this coupon?",
+                                                  "Are you sure you want to delete this zone? This action cannot be undone.",
+                                              isLoading: false.obs,
                                             );
                                           },
                                           icon: Icon(
-                                            Icons.delete,
+                                            Icons.delete_outline,
                                             size: 18,
                                             color: AppColors.warningColor,
                                           ),

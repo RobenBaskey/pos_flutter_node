@@ -1,18 +1,19 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pos/presentations/controller/coupon_controller.dart';
-import 'package:pos/presentations/views/coupon/component/add_coupon.dart';
+import 'package:pos/core/network/api_url.dart';
+import 'package:pos/presentations/views/banner/components/add_banner.dart';
+import 'package:pos/presentations/widgets/custom_image.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/utils.dart';
+import '../../controller/banner_controller.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_container_shape.dart';
 import '../../widgets/custom_divider.dart';
-import '../../widgets/custom_text_field.dart';
 
-class CouponPage extends GetView<CouponController> {
-  const CouponPage({super.key});
+class BannerPage extends GetView<BannerController> {
+  const BannerPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +43,7 @@ class CouponPage extends GetView<CouponController> {
                     SizedBox(width: 10),
                     IconButton(
                       onPressed: () {
-                        controller.getCoupons();
+                        controller.getBanners();
                       },
                       icon: Icon(Icons.replay_outlined),
                     ),
@@ -55,7 +56,7 @@ class CouponPage extends GetView<CouponController> {
                           bearerColor: Theme.of(
                             context,
                           ).colorScheme.outline.withValues(alpha: 0.4),
-                          child: AddCoupon(),
+                          child: AddBanner(),
                         );
                       },
                       title: "",
@@ -67,26 +68,10 @@ class CouponPage extends GetView<CouponController> {
                           Icon(Icons.add, color: Colors.white),
                           SizedBox(width: 6),
                           Text(
-                            "Add Coupon",
+                            "Add Banner",
                             style: TextStyle(color: Colors.white),
                           ),
                         ],
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    SizedBox(
-                      width: 260,
-                      child: CustomTextField(
-                        hintText: "Search Coupons",
-                        borderRadius: 8,
-                        borderColor: Theme.of(context).colorScheme.outline,
-                        suffixIcon: Icon(
-                          Icons.search,
-                          color: AppColors.greyLightTextColor,
-                        ),
-                        onChanged: (value) {
-                          controller.searchCoupon(value);
-                        },
                       ),
                     ),
                   ],
@@ -109,23 +94,23 @@ class CouponPage extends GetView<CouponController> {
                           dividerThickness: 0.1,
                           columns: [
                             DataColumn2(
-                              label: Center(child: Text("CODE")),
+                              label: Center(child: Text("IMAGE")),
                               size: ColumnSize.S,
                             ),
                             DataColumn2(
-                              label: Center(child: Text("TYPE")),
+                              label: Center(child: Text("NAME")),
                               size: ColumnSize.S,
                             ),
                             DataColumn2(
-                              label: Center(child: Text("DISCOUNT")),
+                              label: Center(child: Text("CATEGORY")),
                               size: ColumnSize.S,
                             ),
                             DataColumn2(
-                              label: Center(child: Text("LIMIT")),
+                              label: Center(child: Text("AMOUNT")),
                               size: ColumnSize.S,
                             ),
                             DataColumn2(
-                              label: Center(child: Text("USED")),
+                              label: Center(child: Text("STATUS")),
                               size: ColumnSize.S,
                             ),
                             DataColumn2(
@@ -134,101 +119,52 @@ class CouponPage extends GetView<CouponController> {
                             ),
                           ],
                           rows: List<DataRow>.generate(
-                            controller.searchedCouponList.length,
+                            controller.bannerList.length,
                             (index) {
-                              var coupon = controller.searchedCouponList[index];
+                              var item = controller.bannerList[index];
                               return DataRow(
                                 cells: [
                                   DataCell(
-                                    Center(child: Text(coupon.code ?? "")),
-                                  ),
-                                  DataCell(
                                     Center(
-                                      child: Text(
-                                        (coupon.discountType ?? "")
-                                            .toUpperCase(),
+                                      child: CustomImage(
+                                        path:
+                                            ApiUrl.getImageBaseUrl() +
+                                            (item.image ?? ""),
+                                        width: 50,
+                                        height: 50,
                                       ),
                                     ),
                                   ),
                                   DataCell(
-                                    Center(
-                                      child: Text(
-                                        "${coupon.discountValue ?? 0}${coupon.discountType == "percentage" ? "%" : "৳"}",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: AppColors.primary,
-                                        ),
-                                      ),
-                                    ),
+                                    Center(child: Text(item.name ?? "N/A")),
+                                  ),
+                                  DataCell(
+                                    Center(child: Text(item.categoryId ?? "")),
                                   ),
                                   DataCell(
                                     Center(
                                       child: Text(
-                                        coupon.usageLimit?.toString() ?? "0",
+                                        item.offerAmmount?.toString() ?? "N/A",
                                       ),
                                     ),
                                   ),
-                                  DataCell(
-                                    Center(
-                                      child: Text(
-                                        coupon.usageCount?.toString() ?? "0",
-                                      ),
-                                    ),
-                                  ),
+                                  DataCell(Center(child: Text("STATUS"))),
                                   DataCell(
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
                                         IconButton(
-                                          onPressed: () {},
-                                          icon: Icon(
-                                            Icons.visibility_outlined,
-                                            size: 20,
-                                            color: AppColors.primary,
-                                          ),
+                                          onPressed: () {
+                                            // Handle edit action
+                                          },
+                                          icon: Icon(Icons.edit),
                                         ),
                                         IconButton(
                                           onPressed: () {
-                                            controller.initEdit(coupon);
-                                            Utils.showCustomDialog(
-                                              context: context,
-                                              isDissmissable: false,
-                                              alignment: Alignment.center,
-                                              bearerColor: Theme.of(context)
-                                                  .colorScheme
-                                                  .outline
-                                                  .withValues(alpha: 0.4),
-                                              child: AddCoupon(coupon: coupon),
-                                            );
+                                            // Handle delete action
                                           },
-                                          icon: Icon(
-                                            Icons.edit,
-                                            size: 20,
-                                            color: AppColors.secondary,
-                                          ),
-                                        ),
-                                        IconButton(
-                                          onPressed: () {
-                                            Utils.showDeleteDialog(
-                                              context,
-                                              onYesTap: () {
-                                                controller.deleteCoupon(
-                                                  coupon.id ?? "",
-                                                );
-                                              },
-                                              isLoading:
-                                                  controller.isCouponDeleting,
-                                              title: "Delete Coupon",
-                                              description:
-                                                  "Do you want to delete this coupon?",
-                                            );
-                                          },
-                                          icon: Icon(
-                                            Icons.delete,
-                                            size: 18,
-                                            color: AppColors.warningColor,
-                                          ),
+                                          icon: Icon(Icons.delete),
                                         ),
                                       ],
                                     ),

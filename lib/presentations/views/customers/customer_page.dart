@@ -1,6 +1,5 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:pos/presentations/controller/provider_controller.dart';
 
@@ -126,7 +125,7 @@ class CustomerPage extends GetView<ProviderController> {
                                   ),
                                   DataCell(Text("${provider.phone}")),
                                   DataCell(Text("${provider.companyName}")),
-                                  DataCell(Text("${provider.address ?? ""}")),
+                                  DataCell(Text(provider.address ?? "")),
                                   DataCell(
                                     Row(
                                       mainAxisSize: MainAxisSize.min,
@@ -141,9 +140,9 @@ class CustomerPage extends GetView<ProviderController> {
                                         ),
                                         IconButton(
                                           onPressed: () {},
-                                          icon: FaIcon(
-                                            FontAwesomeIcons.penToSquare,
-                                            size: 16,
+                                          icon: Icon(
+                                            Icons.edit,
+                                            size: 20,
                                             color: AppColors.secondary,
                                           ),
                                         ),
