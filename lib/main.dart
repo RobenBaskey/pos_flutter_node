@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 //import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:get/get.dart';
 import 'package:pos/core/constants/app_sizes.dart';
@@ -12,7 +13,7 @@ import 'presentations/routes/app_pages.dart';
 import 'presentations/routes/app_routes.dart';
 
 Future main() async {
-  //setUrlStrategy(PathUrlStrategy());
+  setUrlStrategy(PathUrlStrategy());
   await InitServices().onInit();
   runApp(const MyApp());
 }
