@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos/core/constants/enum.dart';
 import 'package:pos/core/utils/utils.dart';
+import 'package:pos/data/model/job_model.dart';
 import 'package:pos/domain/entities/category_entity.dart';
 import 'package:pos/domain/entities/job_entity.dart';
 import 'package:pos/domain/repos/job_repo.dart';
@@ -19,7 +20,7 @@ class JobController extends GetxController {
   var costController = TextEditingController();
 
   var isJobLoading = false.obs;
-  var jobList = <JobEntity>[].obs;
+  var jobList = <JobModel>[].obs;
   var searchQuery = ''.obs;
   var currentPage = 1.obs;
   var perPage = 10.obs;
@@ -81,11 +82,11 @@ class JobController extends GetxController {
         limit: perPage.value,
       );
 
-      jobList.value = response.items;
+      jobList.value = response.data;
       currentPage.value = page ?? currentPage.value;
-      perPage.value = response.perPage;
-      totalJobs.value = response.total;
-      totalPages.value = response.totalPages == 0 ? 1 : response.totalPages;
+      perPage.value = response.pagination.perPage;
+      totalJobs.value = response.pagination.total;
+      totalPages.value = response.pagination.totalPages == 0 ? 1 : response.pagination.totalPages;
     } catch (e) {
       Get.snackbar('Error', e.toString());
     } finally {

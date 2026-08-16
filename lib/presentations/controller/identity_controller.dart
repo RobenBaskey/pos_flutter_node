@@ -1,3 +1,4 @@
+import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:pos/core/constants/enum.dart';
 import 'package:pos/data/model/identity_model.dart';
@@ -31,7 +32,7 @@ class IdentityController extends GetxController {
       final identities = await _repo.getIdentity(status: status);
       identityList.value = identities;
     } catch (e) {
-      Get.snackbar('Error', 'Failed to fetch identity data: $e');
+      debugPrint('Error fetching identities: $e');
     } finally {
       isLoading.value = false;
     }

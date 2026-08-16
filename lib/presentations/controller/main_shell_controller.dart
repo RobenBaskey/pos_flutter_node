@@ -22,6 +22,7 @@ import 'package:pos/presentations/views/workplace_type/workplace_type_page.dart'
 import 'package:pos/presentations/views/zones/zone_page.dart';
 
 import '../views/customers/customer_page.dart';
+import '../views/feature_plan/feature_plan.dart';
 
 class MainShellController extends GetxController {
   var isMinimized = false.obs;
@@ -61,6 +62,11 @@ class MainShellController extends GetxController {
       icon: FontAwesomeIcons.crown,
       name: "Package",
       page: PackagePage(),
+    ),
+    ShellModel(
+      icon: FontAwesomeIcons.star,
+      name: "Feature Plans",
+      page: FeaturePlan(),
     ),
     ShellModel(icon: FontAwesomeIcons.tag, name: "Coupen", page: CouponPage()),
     ShellModel(

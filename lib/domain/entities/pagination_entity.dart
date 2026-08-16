@@ -1,15 +1,19 @@
-class PaginationEntity<T> {
-  final List<T> items;
-  final int lastPage;
+class PaginationEntity {
+  final int page;
   final int perPage;
   final int total;
+  final int lastPage;
   final int totalPages;
+  final bool hasNextPage;
+  final bool hasPreviousPage;
 
   PaginationEntity({
-    required this.items,
-    required this.lastPage,
+    required this.page,
     required this.perPage,
     required this.total,
+    required this.lastPage,
     required this.totalPages,
+    required this.hasNextPage,
+    required this.hasPreviousPage
   });
 }

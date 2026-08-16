@@ -1,26 +1,19 @@
 import 'package:pos/data/datasource/remote_db/job_db_source.dart';
-import 'package:pos/domain/entities/job_entity.dart';
-import 'package:pos/domain/entities/pagination_entity.dart';
 import 'package:pos/domain/repos/job_repo.dart';
+
+import '../model/job_model.dart';
+import '../model/pagination_model.dart';
 
 class JobRepoImpl extends JobRepo {
   final JobDbSource _jobDbSource;
   JobRepoImpl(this._jobDbSource);
 
   @override
-  Future<PaginationEntity<JobEntity>> getAllJobs({
+  Future<PaginationWithDataModel<List<JobModel>>> getAllJobs({
     int page = 1,
     int limit = 10,
   }) async {
-    final response = await _jobDbSource.getAllJobs(page: page, limit: limit);
-
-    return PaginationEntity<JobEntity>(
-      items: response.items,
-      lastPage: response.lastPage,
-      perPage: response.perPage,
-      total: response.total,
-      totalPages: response.totalPages,
-    );
+    return await _jobDbSource.getAllJobs(page: page, limit: limit);
   }
 
   @override

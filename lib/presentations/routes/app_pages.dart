@@ -12,6 +12,7 @@ import 'package:pos/presentations/bindings/workplace_type_bindings.dart';
 import 'package:pos/presentations/bindings/zone_binding.dart';
 import 'package:pos/presentations/views/main_shell/main_shell.dart';
 
+import '../bindings/feature_plan_bindings.dart';
 import '../bindings/identity_bindings.dart';
 import '../bindings/role_bindings.dart';
 import '../bindings/setting_bindings.dart';
@@ -43,6 +44,7 @@ class AppPages {
         IdentityBindings(),
         SettingBindings(),
         ZoneBinding(),
+        FeaturePlanBindings(),
       ],
       page: () => MainShell(),
     ),

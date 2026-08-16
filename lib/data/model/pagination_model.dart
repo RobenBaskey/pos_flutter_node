@@ -1,42 +1,45 @@
 import '../../domain/entities/pagination_entity.dart';
 
-class PaginationModel<T> extends PaginationEntity<T> {
-  PaginationModel({
-    required super.items,
-    required super.lastPage,
-    required super.perPage,
-    required super.total,
-    required super.totalPages,
-  });
+class PaginationWithDataModel<T> {
+  final PaginationModel pagination;
+  final T data;
 
-  factory PaginationModel.fromJson(
-    Map<String, dynamic> json, {
-    required String itemKey,
-    required T Function(Map<String, dynamic> json) fromJsonT,
+  PaginationWithDataModel({required this.pagination, required this.data});
+
+  factory PaginationWithDataModel.fromJson({
+    required Map<String, dynamic> json,
+    required T Function(dynamic json) fromJsonT,
+    String? keyName,
   }) {
-    final itemsJson = json[itemKey] as List<dynamic>? ?? [];
+    final dataJson = json[keyName ?? "data"];
 
-    return PaginationModel<T>(
-      items: itemsJson
-          .map((item) => fromJsonT(item as Map<String, dynamic>))
-          .toList(),
-      lastPage: _readInt(json['last_page']),
-      perPage: _readInt(json['per_page']),
-      total: _readInt(json['total']),
-      totalPages: _readInt(json['total_page'] ?? json['total_pages']),
+    return PaginationWithDataModel<T>(
+      pagination: PaginationModel.fromJson(json["pagination"]),
+      data: fromJsonT(dataJson),
     );
   }
+}
 
-  factory PaginationModel.fromResponse(
-    Map<String, dynamic> json, {
-    String dataKey = 'data',
-    required String itemKey,
-    required T Function(Map<String, dynamic> json) fromJsonT,
-  }) {
-    return PaginationModel<T>.fromJson(
-      json[dataKey] as Map<String, dynamic>,
-      itemKey: itemKey,
-      fromJsonT: fromJsonT,
+class PaginationModel extends PaginationEntity {
+  PaginationModel({
+    required super.page,
+    required super.perPage,
+    required super.total,
+    required super.lastPage,
+    required super.totalPages,
+    required super.hasNextPage,
+    required super.hasPreviousPage,
+  });
+
+  factory PaginationModel.fromJson(Map<String, dynamic> json) {
+    return PaginationModel(
+      page: _readInt(json['page']),
+      perPage: _readInt(json['per_page']),
+      total: _readInt(json['total']),
+      lastPage: _readInt(json['last_page']),
+      totalPages: _readInt(json['total_page'] ?? json['total_pages']),
+      hasNextPage: json['has_next_page'] ?? false,
+      hasPreviousPage: json['has_previous_page'] ?? false,
     );
   }
 

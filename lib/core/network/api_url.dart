@@ -1,9 +1,9 @@
 class ApiUrl {
-  static const String _rootUrl = "https://api.jonosokti.com/api/";
-  //static const String _rootUrl = "http://localhost:8080/api/";
+  //static const String _rootUrl = "https://api.jonosokti.com/api/";
+  static const String _rootUrl = "http://localhost:8080/api/";
   static const String _baseUrl = "${_rootUrl}v1";
-  //static String getImageBaseUrl() => "http://localhost:8080";
-  static String getImageBaseUrl() => "https://api.jonosokti.com";
+  static String getImageBaseUrl() => "http://localhost:8080";
+  //static String getImageBaseUrl() => "https://api.jonosokti.com";
 
   ///auth urls
   static String loginUrl() => "$_baseUrl/admin/login";
@@ -92,7 +92,7 @@ class ApiUrl {
 
   ///identity url
   static String getIdentityUrl({String? status}) =>
-      "$_baseUrl/admin/moderator/identity-verification-list?status${status != null ? "=$status" : ""}";
+      "$_baseUrl/admin/moderator/all-identities?status${status != null ? "=$status" : ""}";
   static String verifyIdentityUrl(String userId) =>
       "$_baseUrl/admin/moderator/verify-identity?user_id=$userId";
 
@@ -114,4 +114,16 @@ class ApiUrl {
   static String getZone = "$_baseUrl/admin/moderator/get-admin-zones";
   static String updateZone = "$_baseUrl/admin/moderator/update-zone";
   static String deleteZone = "$_baseUrl/admin/moderator/delete-zone";
+
+  ///feature plan url
+  static String getFeaturePlanUrl() =>
+      "$_baseUrl/admin/moderator/get-admin-feature-plans";
+  static String createFeaturePlanUrl() =>
+      "$_baseUrl/admin/moderator/insert-plan";
+  static String updateFeaturePlanUrl(String id) =>
+      "$_baseUrl/admin/moderator/update-plan?id=$id";
+  static String deleteFeaturePlanUrl(String id) =>
+      "$_baseUrl/admin/moderator/delete-plan?id=$id";
+  static String getPurchasedFeatureUrl() =>
+      "$_baseUrl/admin/moderator/admin-purchased-plans";
 }

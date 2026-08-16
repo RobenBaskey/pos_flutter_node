@@ -3,12 +3,17 @@ import 'package:pos/core/network/dio_client.dart';
 import 'package:pos/data/model/job_model.dart';
 import 'package:pos/data/model/pagination_model.dart';
 
+import '../../model/success_response_model.dart';
+
 abstract class JobDbSource {
   Future<void> insertJob(Map<String, dynamic> jobData);
   // Future<void> updateJob(String jobId, Map<String, dynamic> updatedData);
   // Future<void> deleteJob(String jobId);
   // Future<Map<String, dynamic>> getJobById(String jobId);
-  Future<PaginationModel<JobModel>> getAllJobs({int page = 1, int limit = 10});
+  Future<PaginationWithDataModel<List<JobModel>>> getAllJobs({
+    int page = 1,
+    int limit = 10,
+  });
   Future<bool> updateJobStatus({required String id, required String status});
 }
 
@@ -20,7 +25,7 @@ class JobDbSourceImpl implements JobDbSource {
   // Future<void> deleteJob(String jobId) {}
 
   @override
-  Future<PaginationModel<JobModel>> getAllJobs({
+  Future<PaginationWithDataModel<List<JobModel>>> getAllJobs({
     int page = 1,
     int limit = 10,
   }) async {
@@ -30,11 +35,15 @@ class JobDbSourceImpl implements JobDbSource {
         isTokenRequired: true,
       );
 
-      return PaginationModel<JobModel>.fromResponse(
+      return SuccessResponse<PaginationWithDataModel<List<JobModel>>>.fromJson(
         response,
-        itemKey: 'jobs',
-        fromJsonT: JobModel.fromJson,
-      );
+        (data) => PaginationWithDataModel<List<JobModel>>.fromJson(
+          json: data,
+          fromJsonT: (json) =>
+              (json as List).map((x) => JobModel.fromJson(x)).toList(),
+          keyName: "jobs",
+        ),
+      ).data;
     } catch (e) {
       rethrow;
     }

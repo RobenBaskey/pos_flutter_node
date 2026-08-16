@@ -1,8 +1,8 @@
-import 'package:pos/domain/entities/job_entity.dart';
-import 'package:pos/domain/entities/pagination_entity.dart';
+import '../../data/model/job_model.dart';
+import '../../data/model/pagination_model.dart';
 
 abstract class JobRepo {
-  Future<PaginationEntity<JobEntity>> getAllJobs({
+  Future<PaginationWithDataModel<List<JobModel>>> getAllJobs({
     int page = 1,
     int limit = 10,
   });
