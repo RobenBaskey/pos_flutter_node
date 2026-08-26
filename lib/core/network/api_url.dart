@@ -29,10 +29,64 @@ class ApiUrl {
   static String addJobTypeUrl() => "$_baseUrl/admin/moderator/insert-job-type";
 
   ///jobs url
-  static String getAllJobsUrl({int page = 1, int limit = 10}) =>
-      "$_baseUrl/admin/moderator/all-jobs?page=$page&limit=$limit";
-  static String updateJobStatusUrl() =>
-      "$_baseUrl/admin/moderator/update-job-status";
+  // Review queue: jobs currently awaiting admin review (status pre-filtered
+  // server-side to pending_review — see controller.GetPendingJobsController).
+  static String getPendingJobsUrl({int page = 1, int perPage = 10}) =>
+      "$_baseUrl/admin/moderator/pending-jobs?page=$page&per_page=$perPage";
+  // Every job, optionally filtered by status/search. The query param is
+  // "per_page" (types.GetJobsQuery), not "limit" — the previous version of
+  // this URL builder used "limit", which the backend silently ignores
+  // (GetAllJobs only ever reads req.PerPage from "per_page"), so pagination
+  // requests here were always falling back to the server's default page size.
+  static String getAllJobsUrl({
+    int page = 1,
+    int perPage = 10,
+    String? status,
+    String? search,
+  }) {
+    final buffer = StringBuffer(
+      "$_baseUrl/admin/moderator/all-jobs?page=$page&per_page=$perPage",
+    );
+    if (status != null && status.isNotEmpty) buffer.write("&status=$status");
+    if (search != null && search.isNotEmpty) {
+      buffer.write("&search=${Uri.encodeQueryComponent(search)}");
+    }
+    return buffer.toString();
+  }
+
+  // Full job detail, including zone/user/job type/workplace/category — the
+  // admin-scoped GetJobDetailsController only returns {applied, job_status},
+  // not a full job document, so this uses the public single-job route
+  // instead: an admin's Bearer token satisfies GetSingleJob's
+  // owner-or-admin visibility check for any job regardless of status (see
+  // controller.GetSingleJob).
+  static String getSingleJobUrl(String id) => "$_baseUrl/single-job?id=$id";
+
+  // Provider applications for one job. "id" (not "job_id") is the query
+  // param GetJobApplicantsQuery actually binds.
+  static String getJobApplicantsUrl({
+    required String jobId,
+    int page = 1,
+    int perPage = 10,
+    String? status,
+  }) {
+    final buffer = StringBuffer(
+      "$_baseUrl/admin/moderator/applicants?id=$jobId&page=$page&per_page=$perPage",
+    );
+    if (status != null && status.isNotEmpty) buffer.write("&status=$status");
+    return buffer.toString();
+  }
+
+  // Admin review actions — replace the old, now-removed
+  // /admin/moderator/update-job-status (a single generic status setter with
+  // no transition validation). Each of these is its own endpoint on the
+  // current backend; body shapes are documented at each call site in
+  // job_db_source.dart.
+  static String approveJobUrl() => "$_baseUrl/admin/moderator/approve-job";
+  static String rejectJobUrl() => "$_baseUrl/admin/moderator/reject-job";
+  static String requestJobCorrectionUrl() =>
+      "$_baseUrl/admin/moderator/request-job-correction";
+  static String cancelJobUrl() => "$_baseUrl/admin/moderator/cancel-job";
 
   ///workplace type url
   static String getWorkplaceTypeUrl() => "$_baseUrl/all-workplace-types";

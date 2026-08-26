@@ -1,24 +1,54 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
+
 import 'package:get/get.dart';
 import 'package:pos/core/constants/enum.dart';
 import 'package:pos/core/utils/utils.dart';
+import 'package:pos/data/model/job_application_model.dart';
 import 'package:pos/data/model/job_model.dart';
-import 'package:pos/domain/entities/category_entity.dart';
 import 'package:pos/domain/entities/job_entity.dart';
 import 'package:pos/domain/repos/job_repo.dart';
 
-import '../../domain/entities/job_type_entity.dart';
+/// Admin review actions the current job status allows — backed 1:1 by the
+/// atomic, conditional transitions in jono-db's database/job_review.go.
+/// Never add a value here without a corresponding endpoint the backend
+/// actually exposes to an admin: the frontend must only ever reflect the
+/// backend's transition table, never invent one of its own.
+enum JobAction { approve, requestCorrection, reject, cancel }
+
+/// Which [JobAction]s are valid from a given status. Mirrors:
+///   - approve/requestCorrection/reject: only from PendingReview
+///     (ApproveJob/RequestJobCorrection/RejectJob all filter on
+///     status == pending_review)
+///   - cancel: PendingReview, CorrectionRequired, Approved, ProviderSelected
+///     (CancelJob's cancellableFrom list)
+///   - nothing: Completed, Rejected, Cancelled, Expired (terminal)
+List<JobAction> allowedJobActions(JobStatus? status) {
+  switch (status) {
+    case JobStatus.pendingReview:
+      return [
+        JobAction.approve,
+        JobAction.requestCorrection,
+        JobAction.reject,
+        JobAction.cancel,
+      ];
+    case JobStatus.correctionRequired:
+    case JobStatus.approved:
+    case JobStatus.providerSelected:
+      return [JobAction.cancel];
+    case JobStatus.completed:
+    case JobStatus.rejected:
+    case JobStatus.cancelled:
+    case JobStatus.expired:
+    case null:
+      return const [];
+  }
+}
 
 class JobController extends GetxController {
   final JobRepo _jobRepo;
   JobController(this._jobRepo);
 
-  //insert job
-  var jobTitleController = TextEditingController();
-  var jobDescriptionController = TextEditingController();
-  var addressController = TextEditingController();
-  var costController = TextEditingController();
-
+  // ── List state ───────────────────────────────────────────────────────
   var isJobLoading = false.obs;
   var jobList = <JobModel>[].obs;
   var searchQuery = ''.obs;
@@ -26,141 +56,215 @@ class JobController extends GetxController {
   var perPage = 10.obs;
   var totalJobs = 0.obs;
   var totalPages = 1.obs;
-  var selectedStatus = ''.obs;
-  var isStatusUpdating = false.obs;
 
-  var jobTypeList = <JobTypeEntity>[].obs;
-  var workplaceList = <JobTypeEntity>[].obs;
-  var categoryList = <CategoryEntity>[].obs;
-
-  final List<String> statusOptions = [
-    'Pending',
-    'Active',
-    'Closed',
-    'Cancelled',
-  ];
-  final List<String> pendingActionOptions = ['Active', 'Cancelled'];
-
-  List<JobEntity> get filteredJobList {
-    final query = searchQuery.value.trim().toLowerCase();
-    if (query.isEmpty) return jobList;
-
-    return jobList.where((job) {
-      final customerName = [
-        job.user?.firstName,
-        job.user?.lastName,
-      ].whereType<String>().join(' ');
-
-      final searchableText = [
-        job.title,
-        job.address,
-        job.status,
-        job.jobCategory?.name,
-        job.jobType?.title,
-        job.workplace?.title,
-        customerName,
-      ].whereType<String>().join(' ').toLowerCase();
-
-      return searchableText.contains(query);
-    }).toList();
-  }
+  /// null = "All statuses". Defaults to the review queue so opening the
+  /// page immediately surfaces what needs attention.
+  var statusFilter = Rxn<JobStatus>(JobStatus.pendingReview);
 
   bool get canGoPrevious => currentPage.value > 1;
   bool get canGoNext => currentPage.value < totalPages.value;
 
+  // ── Detail state ─────────────────────────────────────────────────────
+  var selectedJob = Rxn<JobEntity>();
+  var isDetailLoading = false.obs;
+
+  var applicantList = <JobApplicationModel>[].obs;
+  var isApplicantsLoading = false.obs;
+  var totalApplicants = 0.obs;
+
+  // ── Action state ─────────────────────────────────────────────────────
+  var isApproving = false.obs;
+  var isRejecting = false.obs;
+  var isRequestingCorrection = false.obs;
+  var isCancelling = false.obs;
+
+  bool get isActioning =>
+      isApproving.value ||
+      isRejecting.value ||
+      isRequestingCorrection.value ||
+      isCancelling.value;
+
   @override
   void onInit() {
-    getAllJobs();
+    fetchJobs();
     super.onInit();
   }
 
-  Future<void> getAllJobs({int? page}) async {
+  // ── List ─────────────────────────────────────────────────────────────
+
+  Future<void> fetchJobs({int? page}) async {
     try {
       isJobLoading.value = true;
       final response = await _jobRepo.getAllJobs(
         page: page ?? currentPage.value,
-        limit: perPage.value,
+        perPage: perPage.value,
+        status: statusFilter.value?.wireValue,
+        search: searchQuery.value.trim().isEmpty
+            ? null
+            : searchQuery.value.trim(),
       );
 
       jobList.value = response.data;
       currentPage.value = page ?? currentPage.value;
       perPage.value = response.pagination.perPage;
       totalJobs.value = response.pagination.total;
-      totalPages.value = response.pagination.totalPages == 0 ? 1 : response.pagination.totalPages;
+      totalPages.value = response.pagination.totalPages == 0
+          ? 1
+          : response.pagination.totalPages;
     } catch (e) {
-      Get.snackbar('Error', e.toString());
+      Utils.showSnackBar(e.toString(), type: SnackBarType.error);
     } finally {
       isJobLoading.value = false;
     }
   }
 
   Future<void> refreshJobs() async {
-    await getAllJobs(page: currentPage.value);
+    await fetchJobs(page: currentPage.value);
   }
 
   Future<void> nextPage() async {
     if (!canGoNext) return;
-    await getAllJobs(page: currentPage.value + 1);
+    await fetchJobs(page: currentPage.value + 1);
   }
 
   Future<void> previousPage() async {
     if (!canGoPrevious) return;
-    await getAllJobs(page: currentPage.value - 1);
+    await fetchJobs(page: currentPage.value - 1);
   }
 
+  Timer? _searchDebounce;
+
+  /// Search now queries the backend (title/description) instead of
+  /// filtering an already-fetched page client-side, so it's debounced to
+  /// avoid firing a request per keystroke.
   void searchJobs(String value) {
     searchQuery.value = value;
-  }
-
-  void initStatusUpdate(JobEntity job) {
-    selectedStatus.value = canUpdateStatus(job)
-        ? pendingActionOptions.first
-        : job.status ?? statusOptions.first;
-  }
-
-  bool canUpdateStatus(JobEntity job) {
-    return job.status?.toLowerCase() == 'pending';
-  }
-
-  Future<void> updateJobStatus(JobEntity job) async {
-    final id = job.id;
-    if (id == null || id.isEmpty) {
-      Utils.showSnackBar("Job id not found");
-      return;
-    }
-
-    if (!canUpdateStatus(job)) {
-      Utils.showSnackBar("Only pending jobs can be activated or cancelled.");
-      return;
-    }
-
-    if (!pendingActionOptions.contains(selectedStatus.value)) {
-      Utils.showSnackBar("Please select Active or Cancelled.");
-      return;
-    }
-
-    try {
-      isStatusUpdating.value = true;
-      await _jobRepo.updateJobStatus(id: id, status: selectedStatus.value);
-      Get.back();
-      await getAllJobs(page: currentPage.value);
-      Utils.showSnackBar(
-        "Job status updated successfully.",
-        type: SnackBarType.success,
-      );
-    } catch (e) {
-      Utils.showSnackBar(e.toString(), type: SnackBarType.error);
-    } finally {
-      isStatusUpdating.value = false;
-    }
+    _searchDebounce?.cancel();
+    _searchDebounce = Timer(const Duration(milliseconds: 400), () {
+      fetchJobs(page: 1);
+    });
   }
 
   @override
   void onClose() {
-    jobTitleController.dispose();
-    jobDescriptionController.dispose();
-    addressController.dispose();
-    costController.dispose();
+    _searchDebounce?.cancel();
     super.onClose();
+  }
+
+  void changeStatusFilter(JobStatus? status) {
+    statusFilter.value = status;
+    fetchJobs(page: 1);
+  }
+
+  // ── Detail ───────────────────────────────────────────────────────────
+
+  Future<void> openJobDetails(String jobId) async {
+    selectedJob.value = null;
+    applicantList.clear();
+    totalApplicants.value = 0;
+    await Future.wait([_fetchJobDetail(jobId), _fetchApplicants(jobId)]);
+  }
+
+  Future<void> _fetchJobDetail(String jobId) async {
+    try {
+      isDetailLoading.value = true;
+      selectedJob.value = await _jobRepo.getSingleJob(jobId);
+    } catch (e) {
+      Utils.showSnackBar(e.toString(), type: SnackBarType.error);
+    } finally {
+      isDetailLoading.value = false;
+    }
+  }
+
+  Future<void> _fetchApplicants(String jobId) async {
+    try {
+      isApplicantsLoading.value = true;
+      final response = await _jobRepo.getJobApplicants(jobId, perPage: 50);
+      applicantList.value = response.data;
+      totalApplicants.value = response.pagination.total;
+    } catch (e) {
+      Utils.showSnackBar(e.toString(), type: SnackBarType.error);
+    } finally {
+      isApplicantsLoading.value = false;
+    }
+  }
+
+  /// Re-fetches the currently-open job's detail and applicants, and the
+  /// list page behind it — called after every successful review action so
+  /// neither view is left showing a stale status.
+  Future<void> _refreshAfterAction(String jobId) async {
+    await Future.wait([_fetchJobDetail(jobId), refreshJobs()]);
+  }
+
+  // ── Admin review actions ─────────────────────────────────────────────
+
+  Future<void> approveJob(String jobId) async {
+    try {
+      isApproving.value = true;
+      await _jobRepo.approveJob(jobId);
+      Get.back(); // close the confirmation dialog
+      await _refreshAfterAction(jobId);
+      Utils.showSnackBar(
+        "Job approved and is now open for provider applications.",
+        isSuccess: true,
+      );
+    } catch (e) {
+      Utils.showSnackBar(e.toString(), type: SnackBarType.error);
+    } finally {
+      isApproving.value = false;
+    }
+  }
+
+  Future<void> rejectJob({required String jobId, required String reason}) async {
+    if (reason.trim().isEmpty) {
+      Utils.showSnackBar("A rejection reason is required.");
+      return;
+    }
+    try {
+      isRejecting.value = true;
+      await _jobRepo.rejectJob(jobId: jobId, reason: reason.trim());
+      Get.back();
+      await _refreshAfterAction(jobId);
+      Utils.showSnackBar("Job rejected.", isSuccess: true);
+    } catch (e) {
+      Utils.showSnackBar(e.toString(), type: SnackBarType.error);
+    } finally {
+      isRejecting.value = false;
+    }
+  }
+
+  Future<void> requestJobCorrection({
+    required String jobId,
+    required String note,
+  }) async {
+    if (note.trim().isEmpty) {
+      Utils.showSnackBar("A correction note is required.");
+      return;
+    }
+    try {
+      isRequestingCorrection.value = true;
+      await _jobRepo.requestJobCorrection(jobId: jobId, note: note.trim());
+      Get.back();
+      await _refreshAfterAction(jobId);
+      Utils.showSnackBar("Correction requested.", isSuccess: true);
+    } catch (e) {
+      Utils.showSnackBar(e.toString(), type: SnackBarType.error);
+    } finally {
+      isRequestingCorrection.value = false;
+    }
+  }
+
+  Future<void> cancelJob(String jobId) async {
+    try {
+      isCancelling.value = true;
+      await _jobRepo.cancelJob(jobId);
+      Get.back();
+      await _refreshAfterAction(jobId);
+      Utils.showSnackBar("Job cancelled.", isSuccess: true);
+    } catch (e) {
+      Utils.showSnackBar(e.toString(), type: SnackBarType.error);
+    } finally {
+      isCancelling.value = false;
+    }
   }
 }

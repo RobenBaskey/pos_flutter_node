@@ -1,3 +1,4 @@
+import 'package:pos/core/constants/enum.dart';
 import 'package:pos/data/model/category_model.dart';
 import 'package:pos/data/model/zone_model.dart';
 import 'package:pos/domain/entities/job_entity.dart';
@@ -18,6 +19,8 @@ class JobModel extends JobEntity {
     super.emailUrl,
     super.video,
     super.status,
+    super.rejectionReason,
+    super.correctionNote,
     super.createdAt,
     super.updatedAt,
     super.zone,
@@ -25,9 +28,6 @@ class JobModel extends JobEntity {
     super.jobType,
     super.workplace,
     super.jobCategory,
-    super.invitedUser,
-    super.appliedUser,
-    super.acceptedUser,
   });
 
   factory JobModel.fromJson(Map<String, dynamic> json) => JobModel(
@@ -38,12 +38,14 @@ class JobModel extends JobEntity {
         ? null
         : LocationModel.fromJson(json["location"]),
     remotePosition: json["remote_position"],
-    cost: json["cost"],
+    cost: (json["cost"] as num?)?.toDouble(),
     hour: json["hour"],
     description: json["description"],
     emailUrl: json["email_url"],
     video: json["video"],
-    status: json["status"],
+    status: JobStatusX.fromWire(json["status"]),
+    rejectionReason: json["rejection_reason"],
+    correctionNote: json["correction_note"],
     createdAt: json["created_at"] == null
         ? null
         : DateTime.parse(json["created_at"]),
@@ -61,9 +63,6 @@ class JobModel extends JobEntity {
     jobCategory: json["job_category"] == null
         ? null
         : CategoryModel.fromJson(json["job_category"]),
-    invitedUser: json["invited_user"],
-    appliedUser: json["applied_user"],
-    acceptedUser: json["accepted_user"],
   );
 }
 

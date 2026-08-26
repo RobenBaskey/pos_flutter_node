@@ -5,11 +5,13 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:pos/data/datasource/local_db/shared_preference_service.dart';
 
 import '../../presentations/controller/user_controller.dart';
 import '../../presentations/widgets/custom_button.dart';
 import '../../presentations/widgets/image_viewer.dart';
+import '../constants/app_constants.dart';
 import '../constants/enum.dart';
 import '../theme/app_colors.dart';
 
@@ -269,6 +271,21 @@ class Utils {
       alignment: Alignment.center,
       child: ImageViewer(path: path, bytes: bytes),
     );
+  }
+
+  /// Formats an already-major-unit amount (e.g. 1500.5, as returned by every
+  /// Job API response — the backend converts from its integer minor-unit
+  /// storage server-side, see jono-db's helper/money.go) for display, e.g.
+  /// "৳1,500.50". Display-only: never use this output for further
+  /// arithmetic — read the numeric amount straight from the API response for
+  /// that.
+  static final NumberFormat _moneyFormat = NumberFormat.currency(
+    symbol: AppConstants.taksSign,
+    decimalDigits: 2,
+  );
+
+  static String formatMoney(num? amount) {
+    return _moneyFormat.format(amount ?? 0);
   }
 
   static Color getStatusColor(String status) {
