@@ -1,0 +1,10 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/roben/JB/Jonosokti/admin/build/linux/x64/debug/cmake_install.cmake",
+		"/home/roben/JB/Jonosokti/admin/build/linux/x64/debug/flutter/cmake_install.cmake",
+		"/home/roben/JB/Jonosokti/admin/build/linux/x64/debug/runner/cmake_install.cmake",
+		"/home/roben/JB/Jonosokti/admin/build/linux/x64/debug/plugins/url_launcher_linux/cmake_install.cmake"
+	],
+	"Parallel" : false
+}
